@@ -44,7 +44,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane GroupPlane = new Plane(Vector3.up, transform.position);
+        float rayLength;
 
+        if (GroupPlane.Raycast(cameraRay, out rayLength))
+        {
+            Vector3 pointToLook = cameraRay.GetPoint(rayLength);
+            Debug.DrawRay(Camera.main.transform.position, pointToLook, Color.red, Time.deltaTime);
+        }
 
         #region ÁÂÅ¬¸¯
         /*if (Input.GetMouseButtonDown(0) && !isRight)
@@ -112,7 +120,7 @@ public class PlayerController : MonoBehaviour
     {
         
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane GroupPlane = new Plane(Vector3.up, Vector3.zero);
+        Plane GroupPlane = new Plane(Vector3.up, transform.position);
         float rayLength;
 
         if (GroupPlane.Raycast(cameraRay, out rayLength))
@@ -130,7 +138,7 @@ public class PlayerController : MonoBehaviour
     {
         
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane GroupPlane = new Plane(Vector3.up, Vector3.zero);
+        Plane GroupPlane = new Plane(Vector3.up, transform.position);
         float rayLength;
 
         if (GroupPlane.Raycast(cameraRay, out rayLength))
@@ -162,4 +170,19 @@ public class PlayerController : MonoBehaviour
             return -angle;
         }
     }
+
+    //private void OnDrawGizmos()
+    //{
+    //    Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //    Plane GroupPlane = new Plane(Vector3.up, transform.position);
+    //    float rayLength;
+
+    //    if (GroupPlane.Raycast(cameraRay, out rayLength))
+    //    {
+    //        Vector3 pointToLook = cameraRay.GetPoint(rayLength);
+    //        //Vector3 direction = pointToLook - transform.position;
+
+    //        Debug.DrawRay(Camera.main.transform.position, pointToLook, Color.red, Time.deltaTime);
+    //    }
+    //}
 }
