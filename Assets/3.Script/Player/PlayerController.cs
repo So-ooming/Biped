@@ -40,23 +40,10 @@ public class PlayerController : MonoBehaviour
         clickRightLeg = defaultRightLeg * Quaternion.Euler(new Vector3(90f, 0, 90f));
         clickLeftBody = defaultBodyRotation * Quaternion.Euler(new Vector3(30f, 0, 0));
         clickRightBody = defaultBodyRotation * Quaternion.Euler(new Vector3(-30f, 0, 0));
-        Debug.Log("디버그 숨겨놓기~");
     }
 
     void Update()
     {
-        Debug.Log("디버그 숨겨놓기~");
-        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane GroupPlane = new Plane(Vector3.up, transform.position);
-        float rayLength;
-        Debug.Log("디버그 숨겨놓기~");
-        if (GroupPlane.Raycast(cameraRay, out rayLength))
-        {
-            Debug.Log("디버그 숨겨놓기~");
-            Vector3 pointToLook = cameraRay.GetPoint(rayLength);
-            Debug.DrawRay(Camera.main.transform.position, pointToLook, Color.red, Time.deltaTime);
-        }
-        Debug.Log("디버그 숨겨놓기~");
         #region 좌클릭
         /*if (Input.GetMouseButtonDown(0) && !isRight)
         {
@@ -103,12 +90,10 @@ public class PlayerController : MonoBehaviour
             body.localRotation = defaultBodyRotation;
         }
         #endregion
-
     }
 
     private void FixedUpdate()
     {
-        Debug.Log("디버그 숨겨놓기~");
         #region 양쪽 모두 클릭
         if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
         {
@@ -122,14 +107,12 @@ public class PlayerController : MonoBehaviour
 
     public void LookAtMousePointer(Vector3 pivot, Vector3 another)
     {
-        Debug.Log("디버그 숨겨놓기~");
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane GroupPlane = new Plane(Vector3.up, transform.position);
         float rayLength;
 
         if (GroupPlane.Raycast(cameraRay, out rayLength))
         {
-            Debug.Log("디버그 숨겨놓기~");
             Vector3 pointToLook = cameraRay.GetPoint(rayLength);
             //Quaternion targetRot = Quaternion.Euler(pointToLook);
             //transform.LookAt(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
@@ -141,7 +124,6 @@ public class PlayerController : MonoBehaviour
 
     public void LookAtMousePointer()
     {
-        Debug.Log("디버그 숨겨놓기~");
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane GroupPlane = new Plane(Vector3.up, transform.position);
         float rayLength;
@@ -175,19 +157,4 @@ public class PlayerController : MonoBehaviour
             return -angle;
         }
     }
-
-    //private void OnDrawGizmos()
-    //{
-    //    Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //    Plane GroupPlane = new Plane(Vector3.up, transform.position);
-    //    float rayLength;
-
-    //    if (GroupPlane.Raycast(cameraRay, out rayLength))
-    //    {
-    //        Vector3 pointToLook = cameraRay.GetPoint(rayLength);
-    //        //Vector3 direction = pointToLook - transform.position;
-
-    //        Debug.DrawRay(Camera.main.transform.position, pointToLook, Color.red, Time.deltaTime);
-    //    }
-    //}
 }
