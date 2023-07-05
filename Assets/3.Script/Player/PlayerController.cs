@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform rightLeg;
     [SerializeField] private Transform leftPivot;
     [SerializeField] private Transform rightPivot;
-    [SerializeField] private Transform body;
+    [SerializeField] private Transform body; 
     private Rigidbody rb;
 
     Vector3 defaultLeftLegPos;
@@ -22,8 +22,8 @@ public class PlayerController : MonoBehaviour
     Quaternion clickLeftBody;
     Quaternion clickRightBody;
 
-    float moveXpos = -0.000000236504f;
-    float moveYpos = -0.000073570667f;
+    float moveXpos = 0.00236504f;
+    float moveYpos = -0.00073570667f;
 
 
     bool isLeft = false;
@@ -44,18 +44,22 @@ public class PlayerController : MonoBehaviour
         clickRightLeg = defaultRightLeg * Quaternion.Euler(new Vector3(90f, 0, 90f));
         clickLeftBody = defaultBodyRotation * Quaternion.Euler(new Vector3(30f, 0, 0));
         clickRightBody = defaultBodyRotation * Quaternion.Euler(new Vector3(-30f, 0, 0));
-        moveLeftLegPos = new Vector3(moveXpos, moveYpos, 0);
+        moveLeftLegPos = new Vector3(0, moveYpos, moveXpos);
     }
-
+    
     void Update()
     {
         #region ÁÂÅ¬¸¯
         if (Input.GetMouseButtonDown(0) && !isRight)
         {
             leftLeg.localRotation = defaultLeftLeg;
-            leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLeg.localPosition + moveLeftLegPos, Time.deltaTime * rotSpeed);
-            Debug.Log(string.Format("x : {0:E}", leftLeg.localPosition.x));
-            Debug.Log(string.Format("y : {0:E}", leftLeg.localPosition.y));
+            rightLeg.localRotation = rightLeg.localRotation * Quaternion.Euler(new Vector3(0, -35f, 0));
+            //leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLeg.localPosition + moveLeftLegPos, Time.deltaTime * rotSpeed);
+            leftLeg.localPosition = leftLeg.localPosition + moveLeftLegPos;
+            body.localPosition = new Vector3(0f, body.localPosition.y + (moveLeftLegPos.y / 2f), body.localPosition.z + (moveLeftLegPos.z / 2f));
+            //Debug.Log(string.Format("x : {0:E}", leftLeg.localPosition.x));
+            //Debug.Log(string.Format("y : {0:E}", leftLeg.localPosition.y));
+
         }
         if (Input.GetMouseButton(0) && !isRight)
         {
