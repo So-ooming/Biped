@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
 
     Vector3 defaultLeftLegPos;
-    Vector3 defaultRightLegPos;
+    Vector3 moveLeftLegPos;
+    Vector3 moveRightLegPos;
     Quaternion defaultLeftLeg;
     Quaternion defaultRightLeg;
     Quaternion clickLeftLeg;
@@ -20,6 +21,9 @@ public class PlayerController : MonoBehaviour
     Quaternion defaultBodyRotation;
     Quaternion clickLeftBody;
     Quaternion clickRightBody;
+
+    float moveXpos = -0.000000236504f;
+    float moveYpos = -0.000073570667f;
 
 
     bool isLeft = false;
@@ -30,7 +34,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        //defaultLeftLegPos = leftLeg.position;
+        defaultLeftLegPos = leftLeg.localPosition;
         //defaultRightLegPos = rightLeg.position;
         rb = transform.GetComponent<Rigidbody>();
         defaultBodyRotation = body.localRotation;
@@ -40,30 +44,32 @@ public class PlayerController : MonoBehaviour
         clickRightLeg = defaultRightLeg * Quaternion.Euler(new Vector3(90f, 0, 90f));
         clickLeftBody = defaultBodyRotation * Quaternion.Euler(new Vector3(30f, 0, 0));
         clickRightBody = defaultBodyRotation * Quaternion.Euler(new Vector3(-30f, 0, 0));
+        moveLeftLegPos = new Vector3(moveXpos, moveYpos, 0);
     }
 
     void Update()
     {
         #region ÁÂÅ¬¸¯
-        /*if (Input.GetMouseButtonDown(0) && !isRight)
+        if (Input.GetMouseButtonDown(0) && !isRight)
         {
-            rb.isKinematic = true;
-            rb.isKinematic = false;
-        }*/
+            leftLeg.localRotation = defaultLeftLeg;
+            leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLeg.localPosition + moveLeftLegPos, Time.deltaTime * rotSpeed);
+            Debug.Log(string.Format("x : {0:E}", leftLeg.localPosition.x));
+            Debug.Log(string.Format("y : {0:E}", leftLeg.localPosition.y));
+        }
         if (Input.GetMouseButton(0) && !isRight)
         {
             LookAtMousePointer(rightPivot.position, leftPivot.position);
             leftLeg.localRotation = Quaternion.Slerp(leftLeg.localRotation, defaultLeftLeg * clickLeftLeg, Time.deltaTime * rotSpeed);
+            
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickLeftBody, rotSpeed * Time.deltaTime);
             isLeft = true;
         }
         if (Input.GetMouseButtonUp(0) && !isRight)
         {
-            rb.isKinematic = true;
-            rb.isKinematic = false;
             isLeft = false;
             leftLeg.localRotation = defaultLeftLeg;
-            rightLeg.localRotation = defaultRightLeg;
+            //rightLeg.localRotation = defaultRightLeg;
             body.localRotation = defaultBodyRotation;
         }
         #endregion
@@ -83,8 +89,6 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(1) && !isLeft)
         {
-            rb.isKinematic = true;
-            rb.isKinematic = false;
             isRight = false;
             rightLeg.localRotation = defaultRightLeg;
             body.localRotation = defaultBodyRotation;
