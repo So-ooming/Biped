@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !isRight)
         {
             leftLeg.localRotation = defaultLeftLeg;
-            rightLeg.localRotation = rightLeg.localRotation * Quaternion.Euler(new Vector3(0, -35f, 0));
+            //rightLeg.localRotation = rightLeg.localRotation * Quaternion.Euler(new Vector3(0, -35f, 0));
             //leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLeg.localPosition + moveLeftLegPos, Time.deltaTime * rotSpeed);
             leftLeg.localPosition = leftLeg.localPosition + moveLeftLegPos;
             body.localPosition = new Vector3(0f, body.localPosition.y + (moveLeftLegPos.y / 2f), body.localPosition.z + (moveLeftLegPos.z / 2f));
