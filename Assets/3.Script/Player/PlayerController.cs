@@ -8,12 +8,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform rightLeg;
     [SerializeField] private Transform leftPivot;
     [SerializeField] private Transform rightPivot;
-    [SerializeField] private Transform body; 
-    private Rigidbody rb;
+    [SerializeField] private Transform body;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private CapsuleCollider col;
+    [SerializeField] private PhysicMaterial highFric;       // 높은 마찰력 Material
+    [SerializeField] private PhysicMaterial lowFric;        // 낮은 마찰력 Material
 
-    Vector3 defaultLeftLegPos;
-    Vector3 moveLeftLegPos;
-    Vector3 moveRightLegPos;
     Quaternion defaultLeftLeg;
     Quaternion defaultRightLeg;
     Quaternion clickLeftLeg;
@@ -22,21 +22,17 @@ public class PlayerController : MonoBehaviour
     Quaternion clickLeftBody;
     Quaternion clickRightBody;
 
-    float moveXpos = 0.00236504f;
-    float moveYpos = -0.00073570667f;
-
-
-    bool isLeft = false;
-    bool isRight = false;
+    [SerializeField] bool isLeft = false;
+    [SerializeField] bool isRight = false;
+    [SerializeField] bool isSliding = false;
 
     [SerializeField] float speed = 10f;
     [SerializeField] float rotSpeed = 6f;
 
     private void Start()
     {
-        defaultLeftLegPos = leftLeg.localPosition;
-        //defaultRightLegPos = rightLeg.position;
         rb = transform.GetComponent<Rigidbody>();
+        col = transform.GetComponent<CapsuleCollider>();
         defaultBodyRotation = body.localRotation;
         defaultLeftLeg = leftLeg.localRotation;
         defaultRightLeg = rightLeg.localRotation;
@@ -44,55 +40,50 @@ public class PlayerController : MonoBehaviour
         clickRightLeg = defaultRightLeg * Quaternion.Euler(new Vector3(90f, 0, 90f));
         clickLeftBody = defaultBodyRotation * Quaternion.Euler(new Vector3(30f, 0, 0));
         clickRightBody = defaultBodyRotation * Quaternion.Euler(new Vector3(-30f, 0, 0));
-        moveLeftLegPos = new Vector3(0, moveYpos, moveXpos);
     }
     
     void Update()
     {
         #region 좌클릭
-        if (Input.GetMouseButtonDown(0) && !isRight)
+        if (Input.GetMouseButtonDown(0) && !isRight && !isSliding)
         {
+            isLeft = true;
+            col.material = highFric;
             leftLeg.localRotation = defaultLeftLeg;
-            //rightLeg.localRotation = rightLeg.localRotation * Quaternion.Euler(new Vector3(0, -35f, 0));
-            //leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLeg.localPosition + moveLeftLegPos, Time.deltaTime * rotSpeed);
-            leftLeg.localPosition = leftLeg.localPosition + moveLeftLegPos;
-            body.localPosition = new Vector3(0f, body.localPosition.y + (moveLeftLegPos.y / 2f), body.localPosition.z + (moveLeftLegPos.z / 2f));
-            //Debug.Log(string.Format("x : {0:E}", leftLeg.localPosition.x));
-            //Debug.Log(string.Format("y : {0:E}", leftLeg.localPosition.y));
-
         }
-        if (Input.GetMouseButton(0) && !isRight)
+        if (Input.GetMouseButton(0) && !isRight && !isSliding)
         {
             LookAtMousePointer(rightPivot.position, leftPivot.position);
             leftLeg.localRotation = Quaternion.Slerp(leftLeg.localRotation, defaultLeftLeg * clickLeftLeg, Time.deltaTime * rotSpeed);
-            
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickLeftBody, rotSpeed * Time.deltaTime);
-            isLeft = true;
         }
-        if (Input.GetMouseButtonUp(0) && !isRight)
+        if (Input.GetMouseButtonUp(0))
         {
+            col.material = lowFric;
             isLeft = false;
             leftLeg.localRotation = defaultLeftLeg;
-            //rightLeg.localRotation = defaultRightLeg;
             body.localRotation = defaultBodyRotation;
         }
         #endregion
 
         #region 우클릭
-        /*if (Input.GetMouseButtonDown(1) && !isLeft)
+        if (Input.GetMouseButtonDown(1) && !isLeft && !isSliding)
         {
-            
-        }*/
+            isRight = true;
+            col.material = highFric;
+            rightLeg.localRotation = defaultRightLeg;
+        }
 
-        if (Input.GetMouseButton(1) && !isLeft)
+        if (Input.GetMouseButton(1) && !isLeft && !isSliding)
         {
             LookAtMousePointer(leftPivot.position, rightPivot.position);
             rightLeg.localRotation = Quaternion.Slerp(rightLeg.localRotation, defaultRightLeg * clickRightLeg, Time.deltaTime * rotSpeed);
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickRightBody, rotSpeed * Time.deltaTime);            //rightLeg.position = new Vector3(-0.25f, 0.4f, 0);
-            isRight = true;
         }
-        if (Input.GetMouseButtonUp(1) && !isLeft)
+
+        if (Input.GetMouseButtonUp(1))
         {
+            col.material = lowFric;
             isRight = false;
             rightLeg.localRotation = defaultRightLeg;
             body.localRotation = defaultBodyRotation;
@@ -103,12 +94,24 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         #region 양쪽 모두 클릭
-        if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1))
         {
+            isSliding = true;
+            col.material = lowFric;
             leftLeg.localRotation = defaultLeftLeg;
             rightLeg.localRotation = defaultRightLeg;
-            body.localRotation = defaultBodyRotation;
+        }
+
+        if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+        {
+            //body.localRotation = defaultBodyRotation;
             LookAtMousePointer();
+        }
+
+        if((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && isSliding)
+        {
+            isSliding = false;
+            col.material = highFric;
         }
         #endregion
     }
