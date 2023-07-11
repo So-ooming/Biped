@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PhysicMaterial highFric;       // ³ôÀº ¸¶Âû·Â Material
     [SerializeField] private PhysicMaterial lowFric;        // ³·Àº ¸¶Âû·Â Material
 
+    [SerializeField] private Transform[] spawnPoint;
+    private int currentSpawn = 0;
+
     Quaternion defaultLeftLeg;
     Quaternion defaultRightLeg;
     Quaternion clickLeftLeg;
@@ -63,8 +66,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             StopCoroutine("LeftMovement_co");
-            //col.material = lowFric;
-            col.material = highFric;
+            StartCoroutine("StopMovement_co");
             isLeft = false;
             leftLeg.localRotation = defaultLeftLeg;
             body.localRotation = defaultBodyRotation;
@@ -88,12 +90,11 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
-            //col.material = lowFric;
-            col.material = highFric;
+            StopCoroutine("RightMovement_co");
+            StartCoroutine("StopMovement_co");
             isRight = false;
             rightLeg.localRotation = defaultRightLeg;
             body.localRotation = defaultBodyRotation;
-            StopCoroutine("RightMovement_co");
         }
         #endregion
     }
@@ -147,6 +148,15 @@ public class PlayerController : MonoBehaviour
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickRightBody, rotSpeed * Time.deltaTime);
             yield return null;
         }
+    }
+
+    private IEnumerator StopMovement_co()
+    {
+        col.material = highFric;
+        Debug.Log("¾È ¹Ì²ô·¯¿ö");
+        yield return new WaitForSeconds(0.5f);
+        col.material = lowFric;
+        Debug.Log("¹Ì²ô·¯¿ö");
     }
 
     public void LookAtMousePointer(Vector3 pivot, Vector3 another)
@@ -213,5 +223,31 @@ public class PlayerController : MonoBehaviour
             Debug.Log("ÄÝ¸®Á¯ ºÎµúÈû");
             cameraController.currentPoint++;
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("DeadZone"))
+        {
+            Die();
+            Invoke("ReSpawn", 1f);
+        }
+
+        if (other.CompareTag("SpawnUpdate"))
+        {
+            other.gameObject.SetActive(false);
+            currentSpawn++;
+        }
+    }
+
+    void Die()
+    {
+        this.gameObject.SetActive(false);
+    }
+
+    void ReSpawn()
+    {
+        transform.position = spawnPoint[currentSpawn].position;
+        this.gameObject.SetActive(true);
     }
 }
