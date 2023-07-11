@@ -6,6 +6,8 @@ TagManager:
   tags:
   - ChangePoint
   - Slide
+  - DeadZone
+  - SpawnUpdate
   layers:
   - Default
   - TransparentFX
