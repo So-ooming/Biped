@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] float speed = 10f;
     [SerializeField] float rotSpeed = 6f;
+    [SerializeField] float jumpForce = 100f;
 
     [SerializeField] CameraController cameraController;
 
@@ -48,39 +49,50 @@ public class PlayerController : MonoBehaviour
         clickRightBody = defaultBodyRotation * Quaternion.Euler(new Vector3(-30f, 0, 0));
     }
 
-    void Update()
+    private void Update()
     {
         #region ÁÂÅ¬¸¯
-        if (Input.GetMouseButtonDown(0) && !isRight && !isSliding)
+        if (Input.GetMouseButtonDown(0) && !isRight)
         {
             isLeft = true;
-            //col.material = highFric;
             leftLeg.localRotation = defaultLeftLeg;
-            StopCoroutine("LeftMovement_co");
-            StartCoroutine("LeftMovement_co");
+        }
+        if (Input.GetMouseButton(0) && !isRight)
+        {
+            //col.material = highFric;
+            //StopCoroutine("LeftMovement_co");
+            //StartCoroutine("LeftMovement_co");
+            LookAtMousePointer(rightPivot.position, leftPivot.position);
+            leftLeg.localRotation = Quaternion.Slerp(leftLeg.localRotation, defaultLeftLeg * clickLeftLeg, Time.deltaTime * rotSpeed);
+            body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickLeftBody, rotSpeed * Time.deltaTime);
         }
         /*if (Input.GetMouseButton(0) && !isRight && !isSliding)
         {
             
         }*/
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && !isRight)
         {
-            StopCoroutine("LeftMovement_co");
-            StartCoroutine("StopMovement_co");
             isLeft = false;
+            //StopCoroutine("LeftMovement_co");
             leftLeg.localRotation = defaultLeftLeg;
             body.localRotation = defaultBodyRotation;
         }
         #endregion
 
         #region ¿ìÅ¬¸¯
-        if (Input.GetMouseButtonDown(1) && !isLeft && !isSliding)
+        if (Input.GetMouseButtonDown(1) && !isLeft)
         {
             isRight = true;
-            //col.material = highFric;
             rightLeg.localRotation = defaultRightLeg;
-            StopCoroutine("RightMovement_co");
-            StartCoroutine("RightMovement_co");
+        }
+        if (Input.GetMouseButton(1) && !isLeft)
+        {
+            //col.material = highFric;
+            LookAtMousePointer(leftPivot.position, rightPivot.position);
+            rightLeg.localRotation = Quaternion.Slerp(rightLeg.localRotation, defaultRightLeg * clickRightLeg, Time.deltaTime * rotSpeed);
+            body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickRightBody, rotSpeed * Time.deltaTime);
+            //StopCoroutine("RightMovement_co");
+            //StartCoroutine("RightMovement_co");
         }
 
         /*if (Input.GetMouseButton(1) && !isLeft && !isSliding)
@@ -88,11 +100,10 @@ public class PlayerController : MonoBehaviour
             //rightLeg.position = new Vector3(-0.25f, 0.4f, 0);
         }*/
 
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) && !isLeft)
         {
-            StopCoroutine("RightMovement_co");
-            StartCoroutine("StopMovement_co");
             isRight = false;
+            //StopCoroutine("RightMovement_co");
             rightLeg.localRotation = defaultRightLeg;
             body.localRotation = defaultBodyRotation;
         }
@@ -101,52 +112,40 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
+
         #region ¾çÂÊ ¸ðµÎ Å¬¸¯
-        if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+        if (Input.GetMouseButton(2))
         {
-            isLeft = false;
-            isRight = false;
-            col.material = lowFric;
-            leftLeg.localRotation = defaultLeftLeg;
             rightLeg.localRotation = defaultRightLeg;
+            leftLeg.localRotation = defaultLeftLeg;
             body.localRotation = defaultBodyRotation;
             LookAtMousePointer();
         }
-        /*if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1))
-        {
-            isSliding = true;
-            col.material = lowFric;
-            leftLeg.localRotation = defaultLeftLeg;
-            rightLeg.localRotation = defaultRightLeg;
-        }
-
-        if((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && isSliding)
-        {
-            isSliding = false;
-            col.material = highFric;
-        }*/
         #endregion
     }
 
     private IEnumerator LeftMovement_co()
     {
+        WaitForSeconds waitSec = new WaitForSeconds(0.01f);
         while (true)
         {
             LookAtMousePointer(rightPivot.position, leftPivot.position);
             leftLeg.localRotation = Quaternion.Slerp(leftLeg.localRotation, defaultLeftLeg * clickLeftLeg, Time.deltaTime * rotSpeed);
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickLeftBody, rotSpeed * Time.deltaTime);
-            yield return null;
+            yield return waitSec;
         }
     }
 
     private IEnumerator RightMovement_co()
     {
+        WaitForSeconds waitSec = new WaitForSeconds(0.01f);
         while (true)
         {
             LookAtMousePointer(leftPivot.position, rightPivot.position);
             rightLeg.localRotation = Quaternion.Slerp(rightLeg.localRotation, defaultRightLeg * clickRightLeg, Time.deltaTime * rotSpeed);
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickRightBody, rotSpeed * Time.deltaTime);
-            yield return null;
+            yield return waitSec;
         }
     }
 
@@ -157,6 +156,16 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         col.material = lowFric;
         Debug.Log("¹Ì²ô·¯¿ö");
+    }
+
+    private IEnumerator Skating_co()
+    {
+        WaitForSeconds waitSec = new WaitForSeconds(0.01f);
+        while (true)
+        {
+            LookAtMousePointer();
+            yield return waitSec;
+        }
     }
 
     public void LookAtMousePointer(Vector3 pivot, Vector3 another)
@@ -189,8 +198,12 @@ public class PlayerController : MonoBehaviour
             direction = direction.normalized;
             float distance = direction.magnitude;
             //transform.LookAt(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
+            transform.LookAt(-(direction * 100));
+            Debug.DrawRay(Camera.main.transform.position, direction * 100, Color.red, Time.deltaTime);
+            Debug.Log(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
 
-            rb.AddForce(direction * speed * Time.deltaTime, ForceMode.Force);
+            rb.AddForce(direction * speed, ForceMode.Force);
+            //rb.velocity = direction * speed;
         }
     }
 
@@ -222,6 +235,11 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("ÄÝ¸®Á¯ ºÎµúÈû");
             cameraController.currentPoint++;
+        }
+        if (col.transform.CompareTag("Trampoline"))
+        {
+            Debug.Log("ÂÀÇÁ !");
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 

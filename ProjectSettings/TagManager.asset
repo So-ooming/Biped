@@ -8,6 +8,7 @@ TagManager:
   - Slide
   - DeadZone
   - SpawnUpdate
+  - Trampoline
   layers:
   - Default
   - TransparentFX
