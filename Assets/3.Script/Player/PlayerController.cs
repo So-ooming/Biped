@@ -48,16 +48,33 @@ public class PlayerController : MonoBehaviour
         clickRightBody = defaultBodyRotation * Quaternion.Euler(new Vector3(-30f, 0, 0));
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         #region 좌클릭
-        if (Input.GetMouseButtonDown(0) && !isRight && !isSliding)
+        if (Input.GetMouseButtonDown(0))
         {
-            isLeft = true;
-            //col.material = highFric;
-            leftLeg.localRotation = defaultLeftLeg;
-            StopCoroutine("LeftMovement_co");
-            StartCoroutine("LeftMovement_co");
+            if (!isRight)                           // 오른쪽 마우스가 안 눌린 상태라면
+            {
+                isLeft = true;
+                //col.material = highFric;
+                leftLeg.localRotation = defaultLeftLeg;
+                StopCoroutine("LeftMovement_co");
+                StartCoroutine("LeftMovement_co");
+            }
+
+            else                                    // 오른쪽 마우스가 눌린 상태라면
+            {
+                isLeft = false;
+                isSliding = true;
+                StopCoroutine("RightMovement_co");
+                StopCoroutine("Skating_co");
+                StartCoroutine("Skating_co");
+                Debug.Log("오른쪽 누른 상태에서 왼쪽 누름");
+                leftLeg.localRotation = defaultLeftLeg;
+                rightLeg.localRotation = defaultRightLeg;
+                body.localRotation = defaultBodyRotation;
+                Debug.Log("활주 실행 코드 이후");
+            }
         }
         /*if (Input.GetMouseButton(0) && !isRight && !isSliding)
         {
@@ -65,22 +82,38 @@ public class PlayerController : MonoBehaviour
         }*/
         if (Input.GetMouseButtonUp(0))
         {
-            StopCoroutine("LeftMovement_co");
-            StartCoroutine("StopMovement_co");
             isLeft = false;
+            Debug.Log("이즈레프트 펄스");
+            StopCoroutine("LeftMovement_co");
+            StopCoroutine("Skating_co");
+            //StartCoroutine("StopMovement_co");
             leftLeg.localRotation = defaultLeftLeg;
             body.localRotation = defaultBodyRotation;
         }
         #endregion
 
         #region 우클릭
-        if (Input.GetMouseButtonDown(1) && !isLeft && !isSliding)
+        if (Input.GetMouseButtonDown(1))
         {
-            isRight = true;
-            //col.material = highFric;
-            rightLeg.localRotation = defaultRightLeg;
-            StopCoroutine("RightMovement_co");
-            StartCoroutine("RightMovement_co");
+            if (!isLeft)                            // 왼쪽 마우스가 안 눌린 상태라면
+            {
+                isRight = true;
+                //col.material = highFric;
+                rightLeg.localRotation = defaultRightLeg;
+                StopCoroutine("RightMovement_co");
+                StartCoroutine("RightMovement_co");
+            }
+            else                                    // 왼쪽 마우스가 눌린 상태라면
+            {
+                isRight = false;
+                isSliding = true;
+                StopCoroutine("LeftMovement_co");
+                StopCoroutine("Skating_co");
+                StartCoroutine("Skating_co");
+                leftLeg.localRotation = defaultLeftLeg;
+                rightLeg.localRotation = defaultRightLeg;
+                body.localRotation = defaultBodyRotation;
+            }
         }
 
         /*if (Input.GetMouseButton(1) && !isLeft && !isSliding)
@@ -90,63 +123,39 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
-            StopCoroutine("RightMovement_co");
-            StartCoroutine("StopMovement_co");
+            //StartCoroutine("StopMovement_co");
+            Debug.Log("이즈라이트 펄스");
             isRight = false;
-            rightLeg.localRotation = defaultRightLeg;
-            body.localRotation = defaultBodyRotation;
-        }
-        #endregion
-    }
-
-    private void FixedUpdate()
-    {
-        #region 양쪽 모두 클릭
-        if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
-        {
-            isLeft = false;
-            isRight = false;
-            col.material = lowFric;
-            leftLeg.localRotation = defaultLeftLeg;
-            rightLeg.localRotation = defaultRightLeg;
-            body.localRotation = defaultBodyRotation;
-            LookAtMousePointer();
-        }
-        /*if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1))
-        {
-            isSliding = true;
-            col.material = lowFric;
-            leftLeg.localRotation = defaultLeftLeg;
-            rightLeg.localRotation = defaultRightLeg;
-        }
-
-        if((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && isSliding)
-        {
             isSliding = false;
-            col.material = highFric;
-        }*/
+            StopCoroutine("Skating_co");
+            StopCoroutine("RightMovement_co");
+            rightLeg.localRotation = defaultRightLeg;
+            body.localRotation = defaultBodyRotation;
+        }
         #endregion
     }
 
     private IEnumerator LeftMovement_co()
     {
-        while (true)
+        WaitForSeconds waitSec = new WaitForSeconds(0.01f);
+        while (isLeft)
         {
             LookAtMousePointer(rightPivot.position, leftPivot.position);
             leftLeg.localRotation = Quaternion.Slerp(leftLeg.localRotation, defaultLeftLeg * clickLeftLeg, Time.deltaTime * rotSpeed);
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickLeftBody, rotSpeed * Time.deltaTime);
-            yield return null;
+            yield return waitSec;
         }
     }
 
     private IEnumerator RightMovement_co()
     {
-        while (true)
+        WaitForSeconds waitSec = new WaitForSeconds(0.01f);
+        while (isRight)
         {
             LookAtMousePointer(leftPivot.position, rightPivot.position);
             rightLeg.localRotation = Quaternion.Slerp(rightLeg.localRotation, defaultRightLeg * clickRightLeg, Time.deltaTime * rotSpeed);
             body.localRotation = Quaternion.Slerp(body.localRotation, defaultBodyRotation * clickRightBody, rotSpeed * Time.deltaTime);
-            yield return null;
+            yield return waitSec;
         }
     }
 
@@ -157,6 +166,16 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         col.material = lowFric;
         Debug.Log("미끄러워");
+    }
+
+    private IEnumerator Skating_co()
+    {
+        WaitForSeconds waitSec = new WaitForSeconds(0.01f);
+        while (isSliding)
+        {
+            LookAtMousePointer();
+            yield return waitSec;
+        }
     }
 
     public void LookAtMousePointer(Vector3 pivot, Vector3 another)
@@ -188,7 +207,7 @@ public class PlayerController : MonoBehaviour
             Vector3 direction = pointToLook - transform.position;
             direction = direction.normalized;
             float distance = direction.magnitude;
-            //transform.LookAt(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
+            transform.LookAt(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
 
             rb.AddForce(direction * speed * Time.deltaTime, ForceMode.Force);
         }
