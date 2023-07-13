@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Transform ¹× ¹°¸® ÄÄÆ÷³ÍÆ®")]
     [SerializeField] private Transform leftLeg;
     [SerializeField] private Transform rightLeg;
     [SerializeField] private Transform leftPivot;
@@ -14,9 +15,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PhysicMaterial highFric;       // ³ôÀº ¸¶Âû·Â Material
     [SerializeField] private PhysicMaterial lowFric;        // ³·Àº ¸¶Âû·Â Material
 
+    [Header("½ºÆù °ü·Ã")]
     [SerializeField] private Transform[] spawnPoint;
     private int currentSpawn = 0;
+    float pressDuration = 1f;
+    float pressTimer;
 
+    [Header("È¸Àü °ü·Ã")]
     Quaternion defaultLeftLeg;
     Quaternion defaultRightLeg;
     Quaternion clickLeftLeg;
@@ -25,14 +30,18 @@ public class PlayerController : MonoBehaviour
     Quaternion clickLeftBody;
     Quaternion clickRightBody;
 
+    [Header("Bool º¯¼ö")]
     [SerializeField] bool isLeft = false;
     [SerializeField] bool isRight = false;
     [SerializeField] bool isSliding = false;
 
+    [Header("Èû°ú ¼Óµµ")]
     [SerializeField] float speed = 10f;
     [SerializeField] float rotSpeed = 6f;
     [SerializeField] float jumpForce = 100f;
+    [SerializeField] float maxVelX = 7f, maxVelZ = 7f;
 
+    [Header("ETC")]
     [SerializeField] CameraController cameraController;
 
     private void Start()
@@ -197,13 +206,14 @@ public class PlayerController : MonoBehaviour
             Vector3 direction = pointToLook - transform.position;
             direction = direction.normalized;
             float distance = direction.magnitude;
+            Vector3 dir = -(direction * 100);
             //transform.LookAt(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
-            transform.LookAt(-(direction * 100));
-            Debug.DrawRay(Camera.main.transform.position, direction * 100, Color.red, Time.deltaTime);
-            Debug.Log(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
+            transform.LookAt(new Vector3(dir.x, transform.position.y, dir.z));
+            //Debug.DrawRay(Camera.main.transform.position, direction * 100, Color.red, Time.deltaTime);
+            //Debug.Log(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
 
             rb.AddForce(direction * speed, ForceMode.Force);
-            //rb.velocity = direction * speed;
+            LimitSpeed();
         }
     }
 
@@ -236,12 +246,9 @@ public class PlayerController : MonoBehaviour
             Debug.Log("ÄÝ¸®Á¯ ºÎµúÈû");
             cameraController.currentPoint++;
         }
-        if (col.transform.CompareTag("Trampoline"))
-        {
-            Debug.Log("ÂÀÇÁ !");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
     }
+
+    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -256,6 +263,11 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             currentSpawn++;
         }
+        if (other.transform.CompareTag("Trampoline"))
+        {
+            Debug.Log("ÂÀÇÁ !");
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
     }
 
     void Die()
@@ -267,5 +279,25 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = spawnPoint[currentSpawn].position;
         this.gameObject.SetActive(true);
+    }
+
+    void LimitSpeed()
+    {
+        if (rb.velocity.x > maxVelX)
+        {
+            rb.velocity = new Vector3(maxVelX, rb.velocity.y, rb.velocity.z);
+        }
+        if (rb.velocity.x < -maxVelX)
+        {
+            rb.velocity = new Vector3(-maxVelX, rb.velocity.y, rb.velocity.z);
+        }
+        if(rb.velocity.z > maxVelZ)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, maxVelZ);
+        }
+        if(rb.velocity.z < -maxVelZ)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, -maxVelZ);
+        }
     }
 }
