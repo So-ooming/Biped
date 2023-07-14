@@ -263,10 +263,15 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             currentSpawn++;
         }
-        if (other.transform.CompareTag("Trampoline"))
+        if (other.CompareTag("Trampoline"))
         {
             Debug.Log("ÂÀÇÁ !");
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        if (other.CompareTag("Coin"))
+        {
+            other.gameObject.SetActive(false);
         }
     }
 

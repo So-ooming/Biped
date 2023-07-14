@@ -6,8 +6,6 @@ public class InteractionSystem : MonoBehaviour
 {
     [SerializeField] float pressTimer = 0f;
     [SerializeField] float pressDuration = 2f;
-    [SerializeField] GameObject leftDoor;
-    [SerializeField] GameObject rightDoor;
     [SerializeField] GameObject doorSwitch;
     [SerializeField] Material pressedMaterial;
     [SerializeField] Material defaultMaterial;
@@ -22,19 +20,19 @@ public class InteractionSystem : MonoBehaviour
     {
         defaultMaterial = doorSwitch.transform.parent.transform.GetComponent<MeshRenderer>().material;
         //defSwitchPos = doorSwitch.transform.parent.transform.localPosition;
-        //switchValue = doorSwitch.transform.parent.transform.localPosition + new Vector3(0, -0.0004f, 0);
+        //switchValue = doorSwitch.transform.parent.transform.localPosition + new Vector3(0, -0.0002f, 0);
     }
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("DoorOpen"))
         {
-            doorSwitch.transform.parent.transform.GetComponent<MeshRenderer>().material = pressedMaterial;
+            other.transform.parent.transform.GetComponent<MeshRenderer>().material = pressedMaterial;
             //doorSwitch.transform.parent.transform.localPosition = switchValue;
             Debug.Log("¹öÆ°¿¡ ´êÀ½");
             pressTimer += Time.deltaTime;
             if (pressTimer >= pressDuration)
             {
-                Invoke("DoorOpen", 1f);
+                DoorOpen(other);
                 Debug.Log("¹® ¿­·È´ç");
             }
         }
@@ -44,14 +42,17 @@ public class InteractionSystem : MonoBehaviour
     {
         if (other.CompareTag("DoorOpen"))
         {
-            doorSwitch.transform.parent.transform.GetComponent<MeshRenderer>().material = defaultMaterial;
+            other.transform.parent.transform.GetComponent<MeshRenderer>().material = defaultMaterial;
             //doorSwitch.transform.parent.transform.localPosition = defSwitchPos;
+            pressTimer = 0f;
         }
     }
 
-    void DoorOpen()
+    void DoorOpen(Collider other)
     {
-        rightDoor.transform.localRotation = Quaternion.Slerp(rightDoor.transform.rotation, doorRot, rotSpeed * Time.deltaTime);
-        leftDoor.transform.localRotation = Quaternion.Slerp(leftDoor.transform.rotation, Quaternion.Inverse(doorRot), rotSpeed * Time.deltaTime);
+        other.transform.parent.parent.parent.parent.parent.parent.GetChild(5).GetChild(1).GetChild(0).localRotation = 
+            Quaternion.Slerp(other.transform.parent.parent.parent.parent.parent.parent.GetChild(5).GetChild(1).GetChild(0).rotation, doorRot, rotSpeed * Time.deltaTime);
+        other.transform.parent.parent.parent.parent.parent.parent.GetChild(4).GetChild(1).GetChild(0).localRotation = 
+            Quaternion.Slerp(other.transform.parent.parent.parent.parent.parent.parent.GetChild(4).GetChild(1).GetChild(0).rotation, Quaternion.Inverse(doorRot), rotSpeed * Time.deltaTime);
     }
 }
