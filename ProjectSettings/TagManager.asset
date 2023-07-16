@@ -11,6 +11,7 @@ TagManager:
   - Trampoline
   - DoorOpen
   - Coin
+  - CoinContainer
   layers:
   - Default
   - TransparentFX
