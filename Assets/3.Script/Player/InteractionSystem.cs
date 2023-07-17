@@ -9,10 +9,12 @@ public class InteractionSystem : MonoBehaviour
     [SerializeField] float coinDuration = 1.5f;
     [SerializeField] float coinForce = 50f;
     [SerializeField] GameObject doorSwitch;
+    [SerializeField] GameObject Coin;
     [SerializeField] Material pressedMaterial;
     [SerializeField] Material defaultMaterial;
-    [SerializeField] Rigidbody coinContainer;
     [SerializeField] Rigidbody foot;
+   //[SerializeField] FixedJoint playerfj;
+   //[SerializeField] FixedJoint objfj;
 
     //Vector3 defSwitchPos;
     //Vector3 switchValue;
@@ -24,18 +26,19 @@ public class InteractionSystem : MonoBehaviour
     {
         defaultMaterial = doorSwitch.transform.parent.transform.GetComponent<MeshRenderer>().material;
         foot = transform.GetComponent<Rigidbody>();
+        //playerfj = transform.GetComponent<FixedJoint>();
         //defSwitchPos = doorSwitch.transform.parent.transform.localPosition;
         //switchValue = doorSwitch.transform.parent.transform.localPosition + new Vector3(0, -0.0002f, 0);
     }
 
-    private void Update()
+
+    /*private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(coinContainer.transform.rotation);
-        if (coinContainer.transform.rotation.x >= 14f)
+        if (other.transform.CompareTag("CoinContainer"))
         {
-            coinContainer.isKinematic = true;
+            //StartCoroutine(FixedFoot(other));
         }
-    }
+    }*/
 
     private void OnTriggerStay(Collider other)
     {
@@ -56,16 +59,16 @@ public class InteractionSystem : MonoBehaviour
         {
             Debug.Log("¶Ñ²±¿¡ ´êÀ½");
             pressTimer += Time.deltaTime;
-            if(pressTimer >= coinDuration)
+            if (pressTimer >= coinDuration)
             {
-                coinContainer.isKinematic = false;
-                coinContainer.AddForce(Vector3.up * coinForce, ForceMode.Impulse);
-
+                other.transform.GetComponent<Rigidbody>().isKinematic = false;
+                //coinContainer.AddForce(Vector3.up * coinForce, ForceMode.Impulse);
+                other.transform.localRotation = Quaternion.Slerp(other.transform.rotation, Quaternion.Euler(new Vector3(14f, 0, -180f)), 100f * Time.deltaTime);
+                StartCoroutine(SpawnCoin(other));
                 Debug.Log("ÄÚÀÎ ¶Ñ²± µûÁü");
             }
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("DoorOpen"))
@@ -88,5 +91,24 @@ public class InteractionSystem : MonoBehaviour
             Quaternion.Slerp(other.transform.parent.parent.parent.parent.parent.parent.GetChild(5).GetChild(1).GetChild(0).rotation, doorRot, rotSpeed * Time.deltaTime);
         other.transform.parent.parent.parent.parent.parent.parent.GetChild(4).GetChild(1).GetChild(0).localRotation = 
             Quaternion.Slerp(other.transform.parent.parent.parent.parent.parent.parent.GetChild(4).GetChild(1).GetChild(0).rotation, Quaternion.Inverse(doorRot), rotSpeed * Time.deltaTime);
+    }
+
+    IEnumerator FixedFoot(Collider other)
+    {
+        yield return new WaitForSeconds(0.2f);
+        //playerfj.connectedBody = coinContainer;
+        //objfj.connectedBody = foot;
+    }
+
+    IEnumerator SpawnCoin(Collider other)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            GameObject coin = Instantiate(Coin, other.transform.position, Quaternion.identity);
+            Debug.Log(coin.transform.position);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        StopCoroutine("SpawnCoin");
     }
 }
