@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 5b1be5ab6581a9345969c3362b742a3c
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Levenim MT
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d181a13fee50a6747a829f28aa13c16b, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

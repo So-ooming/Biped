@@ -61,12 +61,12 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         #region 좌클릭
-        if (Input.GetMouseButtonDown(0) && !isRight)
+        if (Input.GetMouseButtonDown(0) && !isRight && !GameManager.instance.isPause)
         {
             isLeft = true;
             leftLeg.localRotation = defaultLeftLeg;
         }
-        if (Input.GetMouseButton(0) && !isRight)
+        if (Input.GetMouseButton(0) && !isRight && !GameManager.instance.isPause)
         {
             //col.material = highFric;
             //StopCoroutine("LeftMovement_co");
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
         {
             
         }*/
-        if (Input.GetMouseButtonUp(0) && !isRight)
+        if (Input.GetMouseButtonUp(0) && !isRight && !GameManager.instance.isPause)
         {
             isLeft = false;
             //StopCoroutine("LeftMovement_co");
@@ -89,12 +89,12 @@ public class PlayerController : MonoBehaviour
         #endregion
 
         #region 우클릭
-        if (Input.GetMouseButtonDown(1) && !isLeft)
+        if (Input.GetMouseButtonDown(1) && !isLeft && !GameManager.instance.isPause)
         {
             isRight = true;
             rightLeg.localRotation = defaultRightLeg;
         }
-        if (Input.GetMouseButton(1) && !isLeft)
+        if (Input.GetMouseButton(1) && !isLeft && !GameManager.instance.isPause)
         {
             //col.material = highFric;
             LookAtMousePointer(leftPivot.position, rightPivot.position);
@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour
             //rightLeg.position = new Vector3(-0.25f, 0.4f, 0);
         }*/
 
-        if (Input.GetMouseButtonUp(1) && !isLeft)
+        if (Input.GetMouseButtonUp(1) && !isLeft && !GameManager.instance.isPause)
         {
             isRight = false;
             //StopCoroutine("RightMovement_co");
@@ -121,10 +121,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
-
         #region 양쪽 모두 클릭
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(2) && !GameManager.instance.isPause)
         {
             rightLeg.localRotation = defaultRightLeg;
             leftLeg.localRotation = defaultLeftLeg;
@@ -284,6 +282,8 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = spawnPoint[currentSpawn].position;
         this.gameObject.SetActive(true);
+        col.material = highFric;
+        col.material = null;
     }
 
     void LimitSpeed()
