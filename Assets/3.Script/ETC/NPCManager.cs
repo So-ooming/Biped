@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NPCManager : MonoBehaviour
 {
@@ -34,6 +35,14 @@ public class NPCManager : MonoBehaviour
 
     private void Start()
     {
+        GameManager.instance.isPause = true;
+    }
 
+    private void Update()
+    {
+        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && GameManager.instance.isPause)
+        {
+            // 여기서부터 하면 돼 수민아
+        }
     }
 }
