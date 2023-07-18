@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour
     [Header("Transform 및 물리 컴포넌트")]
     [SerializeField] private Transform leftLeg;
     [SerializeField] private Transform rightLeg;
-    [SerializeField] private Transform leftPivot;
-    [SerializeField] private Transform rightPivot;
     [SerializeField] private Transform body;
+    public Transform leftPivot;
+    public Transform rightPivot;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private CapsuleCollider col;
     [SerializeField] private PhysicMaterial highFric;       // 높은 마찰력 Material
@@ -31,8 +31,8 @@ public class PlayerController : MonoBehaviour
     Quaternion clickRightBody;
 
     [Header("Bool 변수")]
-    [SerializeField] bool isLeft = false;
-    [SerializeField] bool isRight = false;
+    public bool isLeft = false;
+    public bool isRight = false;
     [SerializeField] bool isSliding = false;
 
     [Header("힘과 속도")]
@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotSpeed = 6f;
     [SerializeField] float jumpForce = 100f;
     [SerializeField] float maxVelX = 7f, maxVelZ = 7f;
-
+    
     [Header("ETC")]
     [SerializeField] CameraController cameraController;
 
