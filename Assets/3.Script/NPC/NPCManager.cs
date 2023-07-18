@@ -50,11 +50,16 @@ public class NPCManager : MonoBehaviour
     [SerializeField] Transform targetTransform;
     [SerializeField] Vector3 distance = Vector3.up * 40f;
 
+    [SerializeField] PlayerController player;
+    [SerializeField] CircularArrangement ca;
+
     private void Start()
     {
         NPC = FindObjectsOfType<NPCController>();
         StartCoroutine(Typing(panelText, script[currentDialog]));
         GameManager.instance.isPause = true;
+        player = FindObjectOfType<PlayerController>();
+        ca = FindObjectOfType<CircularArrangement>();
     }
 
     private void Update()
@@ -79,6 +84,8 @@ public class NPCManager : MonoBehaviour
             StartCoroutine(Typing(speechText, script[currentDialog]));
             NPC[currentNPC].NPCRightLegMovement();
             currentDialog++;
+            player.isRight = true;
+            ca.Spawn_Pyosik(player.leftPivot);
         }
     }
 

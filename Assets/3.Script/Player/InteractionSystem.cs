@@ -4,17 +4,27 @@ using UnityEngine;
 
 public class InteractionSystem : MonoBehaviour
 {
+    [Header("시간 관련 변수")]
     [SerializeField] float pressTimer = 0f;
     [SerializeField] float pressDuration = 2f;
     [SerializeField] float coinDuration = 1.5f;
     [SerializeField] float coinForce = 50f;
+
+    [Header("오브젝트")]
     [SerializeField] GameObject doorSwitch;
     [SerializeField] GameObject Coin;
+
+    [Header("머테리얼")]
     [SerializeField] Material pressedMaterial;
     [SerializeField] Material defaultMaterial;
+
+    [Header("Rigidbody")]
     [SerializeField] Rigidbody foot;
-   //[SerializeField] FixedJoint playerfj;
-   //[SerializeField] FixedJoint objfj;
+
+    [Header("튜토리얼 관련")]
+    public int pyosikCnt = 0;
+    //[SerializeField] FixedJoint playerfj;
+    //[SerializeField] FixedJoint objfj;
 
     //Vector3 defSwitchPos;
     //Vector3 switchValue;
@@ -32,13 +42,14 @@ public class InteractionSystem : MonoBehaviour
     }
 
 
-    /*private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.CompareTag("CoinContainer"))
+        if (other.CompareTag("Pyosik"))
         {
-            //StartCoroutine(FixedFoot(other));
+            pyosikCnt++;
+            Destroy(other.gameObject);
         }
-    }*/
+    }
 
     private void OnTriggerStay(Collider other)
     {

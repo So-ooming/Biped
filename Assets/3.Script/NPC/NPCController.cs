@@ -7,6 +7,8 @@ public class NPCController : MonoBehaviour
     [SerializeField] Transform leftLeg;
     [SerializeField] Transform rightLeg;
     [SerializeField] Transform body;
+    [SerializeField] float rotSpeed = 10f;
+    float timer;
 
     Quaternion defaultBodyRotation;
     Quaternion defaultLeftLeg;
@@ -63,10 +65,11 @@ public class NPCController : MonoBehaviour
     public void NPCRightLegMovement()
     {
         isRight = true;
-        rightLeg.localRotation = defaultRightLeg * clickRightLeg;
         rightLeg.localPosition = clickRightLegPos;
+        body.localPosition = clickRightBodyPos;
+        rightLeg.localRotation = defaultRightLeg * clickRightLeg;
         leftLeg.localRotation = defaultLeftLeg * clickedRight_leftLeg;
         body.localRotation = defaultBodyRotation * clickRightBody;
-        body.localPosition = clickRightBodyPos;
+        timer += Time.deltaTime;
     }
 }

@@ -12,6 +12,7 @@ TagManager:
   - DoorOpen
   - Coin
   - CoinContainer
+  - Pyosik
   layers:
   - Default
   - TransparentFX
