@@ -40,6 +40,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotSpeed = 6f;
     [SerializeField] float jumpForce = 100f;
     [SerializeField] float maxVelX = 7f, maxVelZ = 7f;
+
+    [Header("다른 클래스 변수")]
+    NPCManager npcManager;
+    NPCController npcController;
+    [SerializeField] CircularArrangement ca;
     
     [Header("ETC")]
     [SerializeField] CameraController cameraController;
@@ -56,6 +61,10 @@ public class PlayerController : MonoBehaviour
         clickRightLeg = defaultRightLeg * Quaternion.Euler(new Vector3(90f, 0, 90f));
         clickLeftBody = defaultBodyRotation * Quaternion.Euler(new Vector3(30f, 0, 0));
         clickRightBody = defaultBodyRotation * Quaternion.Euler(new Vector3(-30f, 0, 0));
+
+        npcManager = FindObjectOfType<NPCManager>();
+        npcController = FindObjectOfType<NPCController>();
+        ca = FindObjectOfType<CircularArrangement>();
     }
 
     private void Update()
@@ -270,6 +279,22 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Coin"))
         {
             other.gameObject.SetActive(false);
+        }
+
+        if (other.CompareTag("FPyosik"))
+        {
+            other.gameObject.SetActive(false);
+            npcManager.currentDialog++;
+            StartCoroutine(npcManager.Typing(npcManager.speechText, npcManager.script[npcManager.currentDialog]));
+            ca.Spawn_Pyosik(leftPivot);
+        }
+
+        if (other.CompareTag("SPyosik"))
+        {
+            other.gameObject.SetActive(false);
+            npcManager.currentDialog++;
+            StartCoroutine(npcManager.Typing(npcManager.speechText, npcManager.script[npcManager.currentDialog]));
+            ca.Spawn_Pyosik(rightPivot);
         }
     }
 
