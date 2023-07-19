@@ -23,6 +23,9 @@ public class InteractionSystem : MonoBehaviour
 
     [Header("튜토리얼 관련")]
     public int pyosikCnt = 0;
+    [SerializeField] CircularArrangement ca;
+    [SerializeField] NPCManager npcManager;
+    [SerializeField] NPCController npcController;
     //[SerializeField] FixedJoint playerfj;
     //[SerializeField] FixedJoint objfj;
 
@@ -36,6 +39,9 @@ public class InteractionSystem : MonoBehaviour
     {
         defaultMaterial = doorSwitch.transform.parent.transform.GetComponent<MeshRenderer>().material;
         foot = transform.GetComponent<Rigidbody>();
+        ca = FindObjectOfType<CircularArrangement>();
+        npcManager = FindObjectOfType<NPCManager>();
+        npcController = FindObjectOfType<NPCController>();
         //playerfj = transform.GetComponent<FixedJoint>();
         //defSwitchPos = doorSwitch.transform.parent.transform.localPosition;
         //switchValue = doorSwitch.transform.parent.transform.localPosition + new Vector3(0, -0.0002f, 0);
@@ -48,6 +54,14 @@ public class InteractionSystem : MonoBehaviour
         {
             pyosikCnt++;
             Destroy(other.gameObject);
+            if(pyosikCnt == 12)
+            {
+                pyosikCnt = 0;
+                npcManager.currentDialog++;
+                StartCoroutine(npcManager.Typing(npcManager.speechText, npcManager.script[npcManager.currentDialog]));
+                npcController.NPCInit();
+                StartCoroutine(npcController.NPC_Movement_co());
+            }
         }
     }
 

@@ -5,15 +5,13 @@ using UnityEngine.UI;
 
 public class NPCManager : MonoBehaviour
 {
-    string[] script = {"안녕, 우주의 구원자들!  지구로 가기 전에 약간의 훈련이 필요해!",
+    public string[] script = {"안녕, 우주의 구원자들!  지구로 가기 전에 약간의 훈련이 필요해!",
     "다음은 조금 더 실용적인 걸 가르쳐 줄게! 나처럼 오른쪽 다리를 들어봐!", // ~ 패널
     "오른쪽 다리를 들어서 공중에 있는 노란색 표식을 밟아봐.",              // 말풍선 ~
     "오른쪽 다리를 들어서 궤적에 따라 회전시켜보자.",
-    "바닥의 표식을 밟아보자!",
     "다리를 바꿔서 해볼까?",
     "왼쪽 다리를 들어서 공중에 있는 노란색 표식을 밟아봐",
     "왼쪽 다리를 들어서 궤적에 따라 회전시켜보자.",
-    "바닥의 표식을 밟아보자!",
     "그럼 이제 걸어보자!",                                              // NPC 걷기
     "오른쪽!", "왼쪽!", "오른쪽", "왼쪽!", "이쪽으로 와!",
     "게속 앞으로!", "오른쪽!", "왼쪽!", "오른쪽", "왼쪽!", "오른쪽!", "왼쪽!",
@@ -36,11 +34,11 @@ public class NPCManager : MonoBehaviour
     [Header("패널 및 텍스트")]
     [SerializeField] GameObject dialogBox;
     [SerializeField] Text panelText;
-    [SerializeField] Text speechText;
+    public Text speechText;
 
     [Header("인덱스 번호")]
-    [SerializeField] int currentDialog = 0;
-    [SerializeField] int currentNPC = 0;
+    public int currentDialog = 0;
+    public int currentNPC = 0;
 
     [Header("현재 NPC")]
     [SerializeField] NPCController[] NPC;
@@ -52,6 +50,8 @@ public class NPCManager : MonoBehaviour
 
     [SerializeField] PlayerController player;
     [SerializeField] CircularArrangement ca;
+    [SerializeField] GameObject firstPyosik;
+    GameObject secondPyosik;
 
     private void Start()
     {
@@ -60,6 +60,10 @@ public class NPCManager : MonoBehaviour
         GameManager.instance.isPause = true;
         player = FindObjectOfType<PlayerController>();
         ca = FindObjectOfType<CircularArrangement>();
+        firstPyosik = GameObject.FindGameObjectWithTag("FPyosik");
+        secondPyosik = GameObject.FindGameObjectWithTag("SPyosik");
+        firstPyosik.SetActive(false);
+        secondPyosik.SetActive(false);
     }
 
     private void Update()
@@ -83,18 +87,27 @@ public class NPCManager : MonoBehaviour
         {
             StartCoroutine(Typing(speechText, script[currentDialog]));
             NPC[currentNPC].NPCRightLegMovement();
-            currentDialog++;
+            //currentDialog++;
             player.isRight = true;
-            ca.Spawn_Pyosik(player.leftPivot);
+            firstPyosik.SetActive(true);
+        }
+
+        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 4)
+        {
+            currentDialog++;
+            StartCoroutine(Typing(speechText, script[currentDialog]));
+            NPC[currentNPC].NPCLeftLegMovement();
+            player.isLeft = true;
+            secondPyosik.SetActive(true);
         }
     }
 
-    IEnumerator Typing(Text typingText, string message)
+    public IEnumerator Typing(Text typingText, string message)
     {
         for(int i = 0; i < message.Length; i++)
         {
             typingText.text = message.Substring(0, i + 1);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.03f);
         }
     }
 
