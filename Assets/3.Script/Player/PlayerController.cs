@@ -41,13 +41,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpForce = 100f;
     [SerializeField] float maxVelX = 7f, maxVelZ = 7f;
 
-    [Header("다른 클래스 변수")]
+    [Header("ETC")]
     NPCManager npcManager;
     NPCController npcController;
     [SerializeField] CircularArrangement ca;
-    
-    [Header("ETC")]
     [SerializeField] CameraController cameraController;
+    
 
     private void Start()
     {
@@ -295,6 +294,15 @@ public class PlayerController : MonoBehaviour
             npcManager.currentDialog++;
             StartCoroutine(npcManager.Typing(npcManager.speechText, npcManager.script[npcManager.currentDialog]));
             ca.Spawn_Pyosik(rightPivot);
+        }
+
+        if (other.CompareTag("SNpc"))
+        {
+            GameManager.instance.isPause = true;
+            cameraController.vcam[1].gameObject.SetActive(false);  // 메인 카메라 비활성화
+            cameraController.vcam[3].gameObject.SetActive(true);  // NPC캠(2) 활성화
+            //npcManager.dialogBox.SetActive(true);
+            StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
         }
     }
 
