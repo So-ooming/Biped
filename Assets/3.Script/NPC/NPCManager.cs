@@ -32,9 +32,9 @@ public class NPCManager : MonoBehaviour
             "아... 물론 모든 은하계는 좀 오버긴 하지만 하하하~ 너라면 멋지게 해낼 수 있을 거야!"};
 
     [Header("패널 및 텍스트 이미지")]
-    [SerializeField] GameObject dialogBox;
-    [SerializeField] GameObject tutoPanel;
-    [SerializeField] Text panelText;
+    public GameObject dialogBox;
+    public GameObject tutoPanel;
+    public Text panelText;
     public Text speechText;
     public Sprite leftClickImage;
 
