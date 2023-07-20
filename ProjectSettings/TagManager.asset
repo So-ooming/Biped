@@ -15,6 +15,7 @@ TagManager:
   - Pyosik
   - FPyosik
   - SPyosik
+  - SNpc
   layers:
   - Default
   - TransparentFX

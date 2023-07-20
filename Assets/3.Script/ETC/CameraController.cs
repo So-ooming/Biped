@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] Camera cam;
     [SerializeField] Transform[] changePoint;
-    [SerializeField] CinemachineVirtualCamera[] vcam;
+    public CinemachineVirtualCamera[] vcam;
 
     public int currentPoint = 0;
 

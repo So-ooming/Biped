@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class NPCManager : MonoBehaviour
 {
-    public string[] script = {"안녕, 우주의 구원자들!  지구로 가기 전에 약간의 훈련이 필요해!",
+     public string[] script = {"안녕, 우주의 구원자들!  지구로 가기 전에 약간의 훈련이 필요해!",
     "다음은 조금 더 실용적인 걸 가르쳐 줄게! 나처럼 오른쪽 다리를 들어봐!", // ~ 패널
     "오른쪽 다리를 들어서 공중에 있는 노란색 표식을 밟아봐.",              // 말풍선 ~
     "오른쪽 다리를 들어서 궤적에 따라 회전시켜보자.",
@@ -13,9 +13,9 @@ public class NPCManager : MonoBehaviour
     "왼쪽 다리를 들어서 공중에 있는 노란색 표식을 밟아봐",
     "왼쪽 다리를 들어서 궤적에 따라 회전시켜보자.",
     "그럼 이제 걸어보자!",                                              // NPC 걷기
-    "오른쪽!", "왼쪽!", "오른쪽", "왼쪽!", "이쪽으로 와!",
-    "게속 앞으로!", "오른쪽!", "왼쪽!", "오른쪽", "왼쪽!", "오른쪽!", "왼쪽!",
-    "이제 혼자서 해보도록 해!",                                         // 첫 번째 NPC 말풍선 끝
+    "오른쪽! 왼쪽! 오른쪽! 왼쪽!",
+    "계속 앞으로!",
+    "이제 쭉 나아가도록 해!",                                         // 첫 번째 NPC 말풍선 끝
     "이렇게 매끈한 바닥에선 활주를 할 수 있어!",                         // 두 번째 NPC
     "이제 활주를 해볼까?",                                             // 두 번째 NPC 끝
     "어이! 신입은 오랜만이네. 방금 떨어질 때 다리를 다친 건 아니겠지?",   // 세 번째 NPC
@@ -31,27 +31,33 @@ public class NPCManager : MonoBehaviour
     "너의 임무는 지구로 가서 꺼져버린 등대를 다시 밝히는 거야. 모든 은하계가 네 손에 달렸어! " +
             "아... 물론 모든 은하계는 좀 오버긴 하지만 하하하~ 너라면 멋지게 해낼 수 있을 거야!"};
 
-    [Header("패널 및 텍스트")]
+    [Header("패널 및 텍스트 이미지")]
     [SerializeField] GameObject dialogBox;
+    [SerializeField] GameObject tutoPanel;
     [SerializeField] Text panelText;
     public Text speechText;
+    public Sprite leftClickImage;
 
     [Header("인덱스 번호")]
     public int currentDialog = 0;
     public int currentNPC = 0;
 
     [Header("현재 NPC")]
-    [SerializeField] NPCController[] NPC;
+    public NPCController[] NPC;
 
     [Header("말풍선 위치 관련")]
     [SerializeField] RectTransform bubbleTransform;
     [SerializeField] Transform targetTransform;
     [SerializeField] Vector3 distance = Vector3.up * 40f;
 
+    [Header("Other Component")]
     [SerializeField] PlayerController player;
     [SerializeField] CircularArrangement ca;
     [SerializeField] GameObject firstPyosik;
+    [SerializeField] CameraController cameraController;
+
     GameObject secondPyosik;
+    bool isCoroutinePlay = false;
 
     private void Start()
     {
@@ -62,6 +68,7 @@ public class NPCManager : MonoBehaviour
         ca = FindObjectOfType<CircularArrangement>();
         firstPyosik = GameObject.FindGameObjectWithTag("FPyosik");
         secondPyosik = GameObject.FindGameObjectWithTag("SPyosik");
+        cameraController = FindObjectOfType<CameraController>();
         firstPyosik.SetActive(false);
         secondPyosik.SetActive(false);
     }
@@ -83,32 +90,72 @@ public class NPCManager : MonoBehaviour
             }
         }
 
-        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 2 && bubbleTransform.gameObject.activeSelf)
+        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 2 && bubbleTransform.gameObject.activeSelf && !isCoroutinePlay)
         {
             StartCoroutine(Typing(speechText, script[currentDialog]));
             NPC[currentNPC].NPCRightLegMovement();
             //currentDialog++;
             player.isRight = true;
             firstPyosik.SetActive(true);
+            tutoPanel.SetActive(true);
         }
 
-        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 4)
+        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 4 && !isCoroutinePlay)
         {
             currentDialog++;
             StartCoroutine(Typing(speechText, script[currentDialog]));
             NPC[currentNPC].NPCLeftLegMovement();
             player.isLeft = true;
             secondPyosik.SetActive(true);
+            tutoPanel.transform.GetChild(0).GetComponent<Image>().sprite = leftClickImage;
+            tutoPanel.transform.GetChild(1).GetComponent<Text>().text =
+                "마우스 좌클릭으로 왼쪽 다리를 컨트롤 할 수 있습니다.";
+        }
+
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 7 && !isCoroutinePlay)
+        {
+            Debug.Log("다이얼로그 7");
+            currentDialog++;
+            StartCoroutine(Typing(speechText, script[currentDialog]));
+            tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = false;
+            tutoPanel.transform.GetChild(1).GetComponent<Text>().text =
+                "마우스 좌우클릭을 번갈아가며 앞으로 이동하세요.";
+        }
+
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 8 && !isCoroutinePlay)
+        {
+            Debug.Log("다이얼로그 8");
+            currentDialog++;
+            StartCoroutine(Typing(speechText, script[currentDialog]));
+        }
+        
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 9 && !isCoroutinePlay)
+        {
+            Debug.Log("다이얼로그 9");
+            currentDialog++;
+            StartCoroutine(Typing(speechText, script[currentDialog]));
+        }
+
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 10 && !isCoroutinePlay)
+        {
+            Debug.Log("다이얼로그 11");
+            cameraController.vcam[2].transform.gameObject.SetActive(false);
+            cameraController.vcam[0].transform.gameObject.SetActive(true);
+            bubbleTransform.gameObject.SetActive(false);
+            tutoPanel.SetActive(false);
+            currentDialog++;
         }
     }
 
     public IEnumerator Typing(Text typingText, string message)
     {
+        isCoroutinePlay = true;
         for(int i = 0; i < message.Length; i++)
         {
             typingText.text = message.Substring(0, i + 1);
             yield return new WaitForSeconds(0.03f);
         }
+        isCoroutinePlay = false;
     }
 
     void Setup(Transform target)
