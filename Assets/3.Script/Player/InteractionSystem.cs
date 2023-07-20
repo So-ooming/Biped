@@ -25,7 +25,6 @@ public class InteractionSystem : MonoBehaviour
     public int pyosikCnt = 0;
     [SerializeField] CircularArrangement ca;
     [SerializeField] NPCManager npcManager;
-    [SerializeField] NPCController npcController;
     //[SerializeField] FixedJoint playerfj;
     //[SerializeField] FixedJoint objfj;
 
@@ -41,7 +40,6 @@ public class InteractionSystem : MonoBehaviour
         foot = transform.GetComponent<Rigidbody>();
         ca = FindObjectOfType<CircularArrangement>();
         npcManager = FindObjectOfType<NPCManager>();
-        npcController = FindObjectOfType<NPCController>();
         //playerfj = transform.GetComponent<FixedJoint>();
         //defSwitchPos = doorSwitch.transform.parent.transform.localPosition;
         //switchValue = doorSwitch.transform.parent.transform.localPosition + new Vector3(0, -0.0002f, 0);
@@ -59,8 +57,9 @@ public class InteractionSystem : MonoBehaviour
                 pyosikCnt = 0;
                 npcManager.currentDialog++;
                 StartCoroutine(npcManager.Typing(npcManager.speechText, npcManager.script[npcManager.currentDialog]));
-                npcController.NPCInit();
-                StartCoroutine(npcController.NPC_Movement_co());
+                Debug.Log(npcManager.currentDialog);
+                npcManager.NPC[npcManager.currentNPC].NPCInit();
+                //StartCoroutine(npcController.NPC_Movement_co());
             }
         }
     }
