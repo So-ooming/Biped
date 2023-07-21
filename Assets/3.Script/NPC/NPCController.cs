@@ -9,6 +9,7 @@ public class NPCController : MonoBehaviour
     [SerializeField] Transform body;
     [SerializeField] Transform point;
     [SerializeField] float rotSpeed = 10f;
+    [SerializeField] Transform[] NPCTp;
     float timer;
 
     Quaternion defaultBodyRotation;
@@ -128,6 +129,26 @@ public class NPCController : MonoBehaviour
         else
         {
             return -angle;
+        }
+    }
+
+    public IEnumerator SlidingNPC_co()
+    {
+        int index = 0;
+        while (true)
+        {
+            Vector3 dir = (NPCTp[index].position - transform.position).normalized;
+            transform.position += dir * 5f * Time.deltaTime;
+            transform.LookAt(NPCTp[index]);
+            if(Vector3.Distance(transform.position, NPCTp[index].position) < 0.02)
+            {
+                index++;
+                if(index > 3)
+                {
+                    index = 0;
+                }
+            }
+            yield return null;
         }
     }
 }

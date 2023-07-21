@@ -219,6 +219,8 @@ public class PlayerController : MonoBehaviour
             //Debug.Log(new Vector3(-pointToLook.x, transform.position.y, -pointToLook.z));
 
             rb.AddForce(direction * speed, ForceMode.Force);
+            //Quaternion lookdirection = Quaternion.LookRotation(rb.velocity);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, lookdirection, 0.5f);
             LimitSpeed();
         }
     }
@@ -298,11 +300,25 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("SNpc"))
         {
+            other.gameObject.SetActive(false);
             GameManager.instance.isPause = true;
             cameraController.vcam[1].gameObject.SetActive(false);  // 메인 카메라 비활성화
             cameraController.vcam[3].gameObject.SetActive(true);  // NPC캠(2) 활성화
-            //npcManager.dialogBox.SetActive(true);
+            npcManager.dialogBox.SetActive(true);
+            npcManager.bubbleTransform.gameObject.SetActive(false);
             StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
+        }
+
+        if (other.CompareTag("Slide"))
+        {
+            other.gameObject.SetActive(false);
+            if(npcManager.runningCoroutine != null)
+            {
+                StopCoroutine(npcManager.runningCoroutine);
+                npcManager.runningCoroutine = null;
+
+            }
+            npcManager.tutoPanel.SetActive(false);
         }
     }
 
@@ -338,4 +354,6 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, -maxVelZ);
         }
     }
+
+    
 }

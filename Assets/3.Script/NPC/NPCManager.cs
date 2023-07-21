@@ -37,6 +37,7 @@ public class NPCManager : MonoBehaviour
     public Text panelText;
     public Text speechText;
     public Sprite leftClickImage;
+    public Sprite wheelClickImage;
 
     [Header("인덱스 번호")]
     public int currentDialog = 0;
@@ -46,7 +47,7 @@ public class NPCManager : MonoBehaviour
     public NPCController[] NPC;
 
     [Header("말풍선 위치 관련")]
-    [SerializeField] RectTransform bubbleTransform;
+    public RectTransform bubbleTransform;
     [SerializeField] Transform targetTransform;
     [SerializeField] Vector3 distance = Vector3.up * 40f;
 
@@ -61,7 +62,7 @@ public class NPCManager : MonoBehaviour
 
     private void Start()
     {
-        NPC = FindObjectsOfType<NPCController>();
+        //NPC = FindObjectsOfType<NPCController>();
         StartCoroutine(Typing(panelText, script[currentDialog]));
         GameManager.instance.isPause = true;
         player = FindObjectOfType<PlayerController>();
@@ -73,16 +74,33 @@ public class NPCManager : MonoBehaviour
         secondPyosik.SetActive(false);
     }
 
+    public Coroutine runningCoroutine = null;
     private void Update()
     {
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && dialogBox.activeSelf)
         {
             currentDialog++;
-            if (currentDialog > 1)
+            if (currentDialog > 1 && currentDialog < 10)
             {
                 GameManager.instance.isPause = false;
                 dialogBox.SetActive(false);
                 bubbleTransform.gameObject.SetActive(true);
+            }
+            else if (currentDialog > 10)
+            {
+                StartCoroutine(Typing(panelText, script[currentDialog]));
+                if(currentDialog == 13)
+                {
+                    GameManager.instance.isPause = false;
+                    dialogBox.SetActive(false);
+                    tutoPanel.SetActive(true);
+                    tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = true;
+                    tutoPanel.transform.GetChild(0).GetComponent<Image>().sprite = wheelClickImage;
+                    tutoPanel.transform.GetComponentInChildren<Text>().text = "마우스 가운데의 휠 버튼을 클릭하면 활주할 수 있습니다.";
+                    cameraController.vcam[3].gameObject.SetActive(false);
+                    cameraController.vcam[1].gameObject.SetActive(true);
+                    runningCoroutine = StartCoroutine(NPC[currentNPC].SlidingNPC_co());
+                }
             }
             else
             {
@@ -93,6 +111,7 @@ public class NPCManager : MonoBehaviour
         if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 2 && bubbleTransform.gameObject.activeSelf && !isCoroutinePlay)
         {
             StartCoroutine(Typing(speechText, script[currentDialog]));
+            Debug.Log("오른다리 들어");
             NPC[currentNPC].NPCRightLegMovement();
             //currentDialog++;
             player.isRight = true;
@@ -144,6 +163,7 @@ public class NPCManager : MonoBehaviour
             bubbleTransform.gameObject.SetActive(false);
             tutoPanel.SetActive(false);
             currentDialog++;
+            currentNPC++;
         }
     }
 
