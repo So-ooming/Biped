@@ -249,11 +249,11 @@ public class PlayerController : MonoBehaviour
         {
             this.col.material = lowFric;
         }
-        if (col.transform.CompareTag("ChangePoint"))
+        /*if (col.transform.CompareTag("ChangePoint"))
         {
             Debug.Log("ÄÝ¸®Á¯ ºÎµúÈû");
             cameraController.currentPoint++;
-        }
+        }*/
     }
 
     
@@ -309,16 +309,37 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
         }
 
+        if (other.CompareTag("TNpc"))
+        {
+            other.gameObject.SetActive(false);
+            GameManager.instance.isPause = true;
+            npcManager.dialogBox.SetActive(true);
+            StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
+        }
+
+        if (other.CompareTag("FNpc"))
+        {
+            other.gameObject.SetActive(false);
+            GameManager.instance.isPause = true;
+            npcManager.dialogBox.SetActive(true);
+            cameraController.vcam[0].gameObject.SetActive(false);
+            cameraController.vcam[5].gameObject.SetActive(true);
+            StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
+        }
+
         if (other.CompareTag("Slide"))
         {
             other.gameObject.SetActive(false);
-            if(npcManager.runningCoroutine != null)
-            {
-                StopCoroutine(npcManager.runningCoroutine);
-                npcManager.runningCoroutine = null;
-
-            }
             npcManager.tutoPanel.SetActive(false);
+        }
+
+        if (other.CompareTag("SlideExit"))
+        {
+            GameManager.instance.isPause = true;
+            cameraController.SecondNPC_Cam();
+            npcManager.dialogBox.SetActive(true);
+            StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
+            npcManager.currentNPC++;
         }
     }
 
@@ -355,5 +376,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    
+    public void PlayerDefaultState()
+    {
+        rightLeg.localRotation = defaultRightLeg;
+        leftLeg.localRotation = defaultLeftLeg;
+        body.localRotation = defaultBodyRotation;
+    }
 }

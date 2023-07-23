@@ -24,10 +24,10 @@ public class CameraController : MonoBehaviour
 
     void PlayerPositionCheck(int current)
     {
-        if(currentPoint > 1)
+        /*if(currentPoint > 1)
         {
             currentPoint = 1;
-        }
+        }*/
         float dis = Vector3.Distance(player.position, changePoint[current].position);
         if(current == 0)
         {
@@ -47,7 +47,7 @@ public class CameraController : MonoBehaviour
                 }
             }
         }
-        else if(current == 1)
+        /*else if(current == 1)
         {
             if (dis <= 4f)
             {
@@ -58,6 +58,12 @@ public class CameraController : MonoBehaviour
                     vcam[0].transform.gameObject.SetActive(true);
                 }
             }
-        }
+        }*/
+    }
+
+    public void SecondNPC_Cam()
+    {
+        vcam[1].gameObject.SetActive(false);
+        vcam[4].gameObject.SetActive(true);
     }
 }

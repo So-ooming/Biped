@@ -19,10 +19,10 @@ public class GameManager : MonoBehaviour
     }
     #endregion
     public bool isPause = false;
+    public GameObject LastDoor;
     
-
-    void Update()
+    public void Ending()
     {
-        
+        LastDoor.transform.GetComponent<Animator>().enabled = true;
     }
 }
