@@ -74,7 +74,6 @@ public class NPCManager : MonoBehaviour
         secondPyosik.SetActive(false);
     }
 
-    public Coroutine runningCoroutine = null;
     private void Update()
     {
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && dialogBox.activeSelf)
@@ -88,18 +87,54 @@ public class NPCManager : MonoBehaviour
             }
             else if (currentDialog > 10)
             {
-                StartCoroutine(Typing(panelText, script[currentDialog]));
-                if(currentDialog == 13)
+                if(currentDialog < 24)
                 {
-                    GameManager.instance.isPause = false;
+                    StartCoroutine(Typing(panelText, script[currentDialog]));
+                    if (currentDialog == 13)
+                    {
+                        GameManager.instance.isPause = false;
+                        dialogBox.SetActive(false);
+                        tutoPanel.SetActive(true);
+                        tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = true;
+                        tutoPanel.transform.GetChild(0).GetComponent<Image>().sprite = wheelClickImage;
+                        tutoPanel.transform.GetComponentInChildren<Text>().text = "마우스 가운데의 휠 버튼을 클릭하면 활주할 수 있습니다.";
+                        cameraController.vcam[3].gameObject.SetActive(false);
+                        cameraController.vcam[1].gameObject.SetActive(true);
+                        StartCoroutine(NPC[currentNPC].SlidingNPC_co());
+                    }
+                    if (currentDialog == 16)
+                    {
+                        GameManager.instance.isPause = false;
+                        dialogBox.SetActive(false);
+                        tutoPanel.SetActive(true);
+                        tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = false;
+                        tutoPanel.transform.GetComponentInChildren<Text>().text = "두 발을 상자의 노란 부분에 일정 시간 이상 접촉시키면 보물 상자가 열립니다!";
+                    }
+                    if (currentDialog == 17)
+                    {
+                        GameManager.instance.isPause = false;
+                        dialogBox.SetActive(false);
+                        cameraController.vcam[4].gameObject.SetActive(false);
+                        cameraController.vcam[0].gameObject.SetActive(true);
+                    }
+                    if (currentDialog == 18)
+                    {
+                        GameManager.instance.isPause = false;
+                        dialogBox.SetActive(false);
+                        tutoPanel.SetActive(true);
+                        tutoPanel.transform.GetComponentInChildren<Text>().text = "문 앞의 스위치를 일정 시간 이상 밟으면 문이 열립니다!";
+                    }
+                    if (currentDialog == 20)
+                    {
+                        GameManager.instance.isPause = false;
+                        dialogBox.SetActive(false);
+                    }
+                }
+                
+                else
+                {
                     dialogBox.SetActive(false);
-                    tutoPanel.SetActive(true);
-                    tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = true;
-                    tutoPanel.transform.GetChild(0).GetComponent<Image>().sprite = wheelClickImage;
-                    tutoPanel.transform.GetComponentInChildren<Text>().text = "마우스 가운데의 휠 버튼을 클릭하면 활주할 수 있습니다.";
-                    cameraController.vcam[3].gameObject.SetActive(false);
-                    cameraController.vcam[1].gameObject.SetActive(true);
-                    runningCoroutine = StartCoroutine(NPC[currentNPC].SlidingNPC_co());
+                    GameManager.instance.Ending();
                 }
             }
             else
@@ -133,7 +168,6 @@ public class NPCManager : MonoBehaviour
 
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 7 && !isCoroutinePlay)
         {
-            Debug.Log("다이얼로그 7");
             currentDialog++;
             StartCoroutine(Typing(speechText, script[currentDialog]));
             tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = false;
@@ -143,21 +177,18 @@ public class NPCManager : MonoBehaviour
 
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 8 && !isCoroutinePlay)
         {
-            Debug.Log("다이얼로그 8");
             currentDialog++;
             StartCoroutine(Typing(speechText, script[currentDialog]));
         }
         
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 9 && !isCoroutinePlay)
         {
-            Debug.Log("다이얼로그 9");
             currentDialog++;
             StartCoroutine(Typing(speechText, script[currentDialog]));
         }
 
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 10 && !isCoroutinePlay)
         {
-            Debug.Log("다이얼로그 11");
             cameraController.vcam[2].transform.gameObject.SetActive(false);
             cameraController.vcam[0].transform.gameObject.SetActive(true);
             bubbleTransform.gameObject.SetActive(false);

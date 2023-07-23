@@ -16,6 +16,11 @@ TagManager:
   - FPyosik
   - SPyosik
   - SNpc
+  - SlideExit
+  - tutoCoinContainer
+  - TNpc
+  - tutoDoorOpen
+  - FNpc
   layers:
   - Default
   - TransparentFX
