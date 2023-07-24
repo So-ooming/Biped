@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class MenuButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class MenuButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] Button btn;
     [SerializeField] Image image;
@@ -30,6 +30,16 @@ public class MenuButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExit
     }
 
     public void OnPointerExit(PointerEventData eventData)
+    {
+        image.gameObject.SetActive(false);
+        btnBack.sprite = null;
+        btnBack.color = new Color(255, 255, 255, 0);
+        text.color = new Color(0, 0, 0, 255);
+        transform.GetComponent<Animator>().enabled = false;
+        transform.localScale = new Vector3(1, 1, 1);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
     {
         image.gameObject.SetActive(false);
         btnBack.sprite = null;
