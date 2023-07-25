@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -38,6 +39,11 @@ public class UIManager : MonoBehaviour
         {
             ExitUI_Cancel();
         }
+
+        if(Input.GetKeyDown(KeyCode.Return) && thirdScene.activeSelf)
+        {
+            GameStart();
+        }
     }
 
     public void LoadThirdScene()
@@ -49,6 +55,12 @@ public class UIManager : MonoBehaviour
     public void GameExit()
     {
         ExitUI.SetActive(true);
+    }
+
+    public void GameStart()
+    {
+        LoadScene.sceneName = "Stage_1";
+        SceneManager.LoadScene("Loading");
     }
 
     public void ExitUI_OK()
@@ -63,5 +75,11 @@ public class UIManager : MonoBehaviour
     public void ExitUI_Cancel()
     {
         ExitUI.SetActive(false);
+    }
+
+    public void ThirdToSecondScene()
+    {
+        thirdScene.SetActive(false);
+        secondScene.SetActive(true);
     }
 }

@@ -280,6 +280,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Coin"))
         {
             other.gameObject.SetActive(false);
+            GameManager.instance.coinCnt++;
         }
 
         if (other.CompareTag("FPyosik"))
@@ -302,6 +303,7 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             GameManager.instance.isPause = true;
+            GameManager.instance.CoinUI.SetActive(false);
             cameraController.vcam[1].gameObject.SetActive(false);  // 메인 카메라 비활성화
             cameraController.vcam[3].gameObject.SetActive(true);  // NPC캠(2) 활성화
             npcManager.dialogBox.SetActive(true);
@@ -313,6 +315,7 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             GameManager.instance.isPause = true;
+            GameManager.instance.CoinUI.SetActive(false);
             npcManager.dialogBox.SetActive(true);
             StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
         }
@@ -321,6 +324,7 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             GameManager.instance.isPause = true;
+            GameManager.instance.CoinUI.SetActive(false);
             npcManager.dialogBox.SetActive(true);
             cameraController.vcam[0].gameObject.SetActive(false);
             cameraController.vcam[5].gameObject.SetActive(true);
@@ -336,6 +340,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("SlideExit"))
         {
             GameManager.instance.isPause = true;
+            GameManager.instance.CoinUI.SetActive(false);
             cameraController.SecondNPC_Cam();
             npcManager.dialogBox.SetActive(true);
             StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
@@ -346,6 +351,7 @@ public class PlayerController : MonoBehaviour
     void Die()
     {
         this.gameObject.SetActive(false);
+        GameManager.instance.deathCnt++;
     }
 
     void ReSpawn()
