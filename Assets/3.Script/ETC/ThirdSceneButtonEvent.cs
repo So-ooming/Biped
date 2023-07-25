@@ -7,10 +7,12 @@ using UnityEngine.EventSystems;
 public class ThirdSceneButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] Image image;
+    [SerializeField] Image keyImage;
     [SerializeField] Text text;
 
     private void Start()
     {
+        keyImage = transform.GetChild(1).GetComponent<Image>();
         image = transform.GetComponent<Image>();
         text = transform.GetComponentInChildren<Text>();
     }
@@ -18,6 +20,7 @@ public class ThirdSceneButtonEvent : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         image.color = new Color32(255, 255, 255, 255);
         text.color = new Color32(255, 185, 0, 255);
+        keyImage.gameObject.SetActive(false);
         StartCoroutine(Slowly());
     }
 
@@ -26,6 +29,7 @@ public class ThirdSceneButtonEvent : MonoBehaviour, IPointerEnterHandler, IPoint
         image.color = new Color32(255, 255, 255, 100);
         text.color = new Color32(50, 50, 50, 255);
         transform.localScale = new Vector3(1, 1, 0);
+        keyImage.gameObject.SetActive(true);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -33,6 +37,7 @@ public class ThirdSceneButtonEvent : MonoBehaviour, IPointerEnterHandler, IPoint
         image.color = new Color32(255, 255, 255, 100);
         text.color = new Color32(50, 50, 50, 255);
         transform.localScale = new Vector3(1, 1, 0);
+        keyImage.gameObject.SetActive(true);
     }
 
     IEnumerator Slowly()

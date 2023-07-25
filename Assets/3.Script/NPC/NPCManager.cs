@@ -65,6 +65,7 @@ public class NPCManager : MonoBehaviour
         //NPC = FindObjectsOfType<NPCController>();
         StartCoroutine(Typing(panelText, script[currentDialog]));
         GameManager.instance.isPause = true;
+        GameManager.instance.CoinUI.SetActive(false);
         player = FindObjectOfType<PlayerController>();
         ca = FindObjectOfType<CircularArrangement>();
         firstPyosik = GameObject.FindGameObjectWithTag("FPyosik");
@@ -82,6 +83,7 @@ public class NPCManager : MonoBehaviour
             if (currentDialog > 1 && currentDialog < 10)
             {
                 GameManager.instance.isPause = false;
+                GameManager.instance.CoinUI.SetActive(true);
                 dialogBox.SetActive(false);
                 bubbleTransform.gameObject.SetActive(true);
             }
@@ -93,6 +95,7 @@ public class NPCManager : MonoBehaviour
                     if (currentDialog == 13)
                     {
                         GameManager.instance.isPause = false;
+                        GameManager.instance.CoinUI.SetActive(true);
                         dialogBox.SetActive(false);
                         tutoPanel.SetActive(true);
                         tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = true;
@@ -105,6 +108,7 @@ public class NPCManager : MonoBehaviour
                     if (currentDialog == 16)
                     {
                         GameManager.instance.isPause = false;
+                        GameManager.instance.CoinUI.SetActive(true);
                         dialogBox.SetActive(false);
                         tutoPanel.SetActive(true);
                         tutoPanel.transform.GetChild(0).GetComponent<Image>().enabled = false;
@@ -113,6 +117,7 @@ public class NPCManager : MonoBehaviour
                     if (currentDialog == 17)
                     {
                         GameManager.instance.isPause = false;
+                        GameManager.instance.CoinUI.SetActive(true);
                         dialogBox.SetActive(false);
                         cameraController.vcam[4].gameObject.SetActive(false);
                         cameraController.vcam[0].gameObject.SetActive(true);
@@ -120,6 +125,7 @@ public class NPCManager : MonoBehaviour
                     if (currentDialog == 18)
                     {
                         GameManager.instance.isPause = false;
+                        GameManager.instance.CoinUI.SetActive(true);
                         dialogBox.SetActive(false);
                         tutoPanel.SetActive(true);
                         tutoPanel.transform.GetComponentInChildren<Text>().text = "문 앞의 스위치를 일정 시간 이상 밟으면 문이 열립니다!";
@@ -127,6 +133,7 @@ public class NPCManager : MonoBehaviour
                     if (currentDialog == 20)
                     {
                         GameManager.instance.isPause = false;
+                        GameManager.instance.CoinUI.SetActive(true);
                         dialogBox.SetActive(false);
                     }
                 }
