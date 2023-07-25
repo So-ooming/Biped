@@ -1336,6 +1336,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1697773240}
+  - component: {fileID: 1697773241}
   m_Layer: 0
   m_Name: EndingManager
   m_TagString: Untagged
@@ -1357,6 +1358,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1697773241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697773239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f724ef0f68d3a04ebc2926bdd4cdb85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coinText: {fileID: 1791547479}
+  deathText: {fileID: 781792671}
+  timeText: {fileID: 192517883}
 --- !u!1 &1791547477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1801,9 +1817,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: GameStart
+      - m_Target: {fileID: 1697773241}
+        m_TargetAssemblyTypeName: EndingManager, Assembly-CSharp
+        m_MethodName: GoToMain
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -280,6 +280,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Coin"))
         {
             other.gameObject.SetActive(false);
+            GameManager.instance.coinAnim.SetTrigger("EatCoin");
             GameManager.instance.coinCnt++;
         }
 
