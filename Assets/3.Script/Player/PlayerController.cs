@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
         #region 좌클릭
         if (Input.GetMouseButtonDown(0) && !isRight && !GameManager.instance.isPause)
         {
+            SoundManager.instance.PlaySFX("LegUpSound");
             isLeft = true;
             leftLeg.localRotation = defaultLeftLeg;
         }
@@ -89,6 +90,7 @@ public class PlayerController : MonoBehaviour
         }*/
         if (Input.GetMouseButtonUp(0) && !isRight && !GameManager.instance.isPause)
         {
+            SoundManager.instance.PlaySFX("LegDownSound");
             isLeft = false;
             //StopCoroutine("LeftMovement_co");
             leftLeg.localRotation = defaultLeftLeg;
@@ -99,6 +101,7 @@ public class PlayerController : MonoBehaviour
         #region 우클릭
         if (Input.GetMouseButtonDown(1) && !isLeft && !GameManager.instance.isPause)
         {
+            SoundManager.instance.PlaySFX("LegUpSound");
             isRight = true;
             rightLeg.localRotation = defaultRightLeg;
         }
@@ -119,6 +122,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1) && !isLeft && !GameManager.instance.isPause)
         {
+            SoundManager.instance.PlaySFX("LegDownSound");
             isRight = false;
             //StopCoroutine("RightMovement_co");
             rightLeg.localRotation = defaultRightLeg;
@@ -279,6 +283,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Coin"))
         {
+            SoundManager.instance.PlaySFX("EatCoin");
             other.gameObject.SetActive(false);
             GameManager.instance.coinAnim.SetTrigger("EatCoin");
             GameManager.instance.coinCnt++;
@@ -310,6 +315,7 @@ public class PlayerController : MonoBehaviour
             npcManager.dialogBox.SetActive(true);
             npcManager.bubbleTransform.gameObject.SetActive(false);
             StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
+            SoundManager.instance.PlaySFX("NPCAppear");
         }
 
         if (other.CompareTag("TNpc"))
@@ -319,6 +325,7 @@ public class PlayerController : MonoBehaviour
             GameManager.instance.CoinUI.SetActive(false);
             npcManager.dialogBox.SetActive(true);
             StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
+            SoundManager.instance.PlaySFX("NPCAppear");
         }
 
         if (other.CompareTag("FNpc"))
@@ -330,6 +337,7 @@ public class PlayerController : MonoBehaviour
             cameraController.vcam[0].gameObject.SetActive(false);
             cameraController.vcam[5].gameObject.SetActive(true);
             StartCoroutine(npcManager.Typing(npcManager.panelText, npcManager.script[npcManager.currentDialog]));
+            SoundManager.instance.PlaySFX("NPCAppear");
         }
 
         if (other.CompareTag("Slide"))

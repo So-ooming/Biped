@@ -16,18 +16,21 @@ public class UIManager : MonoBehaviour
         {
             firstScene.SetActive(false);
             secondScene.SetActive(true);
+            SoundManager.instance.PlaySFX("MenuEnable");
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) && secondScene.activeSelf && !ExitUI.activeSelf)
         {
             secondScene.SetActive(false);
             firstScene.SetActive(true);
+            SoundManager.instance.PlaySFX("MenuEnable");
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) && thirdScene.activeSelf)
         {
             thirdScene.SetActive(false);
             secondScene.SetActive(true);
+            SoundManager.instance.PlaySFX("MenuEnable");
         }
 
         if(ExitUI.activeSelf && Input.GetKeyDown(KeyCode.Return))
@@ -50,6 +53,7 @@ public class UIManager : MonoBehaviour
     {
         secondScene.SetActive(false);
         thirdScene.SetActive(true);
+        SoundManager.instance.PlaySFX("MenuEnable");
     }
 
     public void GameExit()
@@ -71,7 +75,7 @@ public class UIManager : MonoBehaviour
         Application.Quit(); // 어플리케이션 종료
 #endif
     }
-
+    
     public void ExitUI_Cancel()
     {
         ExitUI.SetActive(false);
@@ -81,5 +85,6 @@ public class UIManager : MonoBehaviour
     {
         thirdScene.SetActive(false);
         secondScene.SetActive(true);
+        SoundManager.instance.PlaySFX("MenuEnable");
     }
 }

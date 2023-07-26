@@ -73,6 +73,7 @@ public class NPCManager : MonoBehaviour
         cameraController = FindObjectOfType<CameraController>();
         firstPyosik.SetActive(false);
         secondPyosik.SetActive(false);
+        SoundManager.instance.PlaySFX("NPCAppear");
     }
 
     private void Update()
@@ -153,7 +154,6 @@ public class NPCManager : MonoBehaviour
         if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && currentDialog == 2 && bubbleTransform.gameObject.activeSelf && !isCoroutinePlay)
         {
             StartCoroutine(Typing(speechText, script[currentDialog]));
-            Debug.Log("오른다리 들어");
             NPC[currentNPC].NPCRightLegMovement();
             //currentDialog++;
             player.isRight = true;
@@ -207,6 +207,7 @@ public class NPCManager : MonoBehaviour
 
     public IEnumerator Typing(Text typingText, string message)
     {
+        SoundManager.instance.PlaySFX("Dialog");
         isCoroutinePlay = true;
         for(int i = 0; i < message.Length; i++)
         {
