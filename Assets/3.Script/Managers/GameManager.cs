@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     {
         coinText = CoinUI.transform.GetChild(0).GetChild(0).GetComponent<Text>();
         coinAnim = CoinUI.transform.GetComponent<Animator>();
+        SoundManager.instance.PlayBGM("Stage_1");
     }
 
 
@@ -87,8 +88,8 @@ public class GameManager : MonoBehaviour
 
     public void ActivePauseUI()
     {
+        SoundManager.instance.PlaySFX("MenuEnable");
         PauseUI.SetActive(true);
-        Debug.Log("왜 안 켜져 이거");
         isPause = true;
         CoinUI.SetActive(false);
     }
@@ -96,7 +97,6 @@ public class GameManager : MonoBehaviour
     public void InactivePauseUI()
     {
         PauseUI.SetActive(false);
-        Debug.Log("안 켜지는 이유"); 
         isPause = false;
         CoinUI.SetActive(true);
     }

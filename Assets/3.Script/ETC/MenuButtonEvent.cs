@@ -27,6 +27,7 @@ public class MenuButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExit
         btnBack.color = new Color(255, 255, 255, 255);
         text.color = new Color32(255, 185, 0, 255);
         transform.GetComponent<Animator>().enabled = true;
+        SoundManager.instance.PlaySFX("MousePointerEnter");
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -47,5 +48,6 @@ public class MenuButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExit
         text.color = new Color(0, 0, 0, 255);
         transform.GetComponent<Animator>().enabled = false;
         transform.localScale = new Vector3(1, 1, 1);
+        SoundManager.instance.PlaySFX("MousePointerEnter");
     }
 }

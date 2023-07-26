@@ -22,6 +22,7 @@ public class ThirdSceneButtonEvent : MonoBehaviour, IPointerEnterHandler, IPoint
         text.color = new Color32(255, 185, 0, 255);
         keyImage.gameObject.SetActive(false);
         StartCoroutine(Slowly());
+        SoundManager.instance.PlaySFX("MousePointerEnter");
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -38,6 +39,7 @@ public class ThirdSceneButtonEvent : MonoBehaviour, IPointerEnterHandler, IPoint
         text.color = new Color32(50, 50, 50, 255);
         transform.localScale = new Vector3(1, 1, 0);
         keyImage.gameObject.SetActive(true);
+        SoundManager.instance.PlaySFX("MousePointerEnter");
     }
 
     IEnumerator Slowly()

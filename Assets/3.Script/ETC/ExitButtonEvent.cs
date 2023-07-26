@@ -20,6 +20,7 @@ public class ExitButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExit
         StartCoroutine(Slowly());
         text.color = new Color32(255, 180, 0, 255);
         image.gameObject.SetActive(false);
+        SoundManager.instance.PlaySFX("MousePointerEnter");
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -36,6 +37,7 @@ public class ExitButtonEvent : MonoBehaviour, IPointerEnterHandler, IPointerExit
         text.color = new Color32(89, 89, 89, 255);
         image.gameObject.SetActive(true);
         transform.localScale = new Vector3(1, 1, 0);
+        SoundManager.instance.PlaySFX("MousePointerEnter");
     }
 
     IEnumerator Slowly()
