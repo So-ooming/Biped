@@ -20,8 +20,8 @@ public class OptionButtonEffect : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     IEnumerator Slowly()
     {
-        Vector3 a = new Vector3(0, 0, 0.01f);
-        for(int i = 0; i < 100; i++)
+        Vector3 a = new Vector3(0.008f, 0.008f, 0);
+        for(int i = 0; i < 25; i++)
         {
             transform.localScale += a;
             yield return null;
