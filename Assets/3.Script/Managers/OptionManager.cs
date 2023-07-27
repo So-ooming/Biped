@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
-public class AudioManager : MonoBehaviour
+public class OptionManager : MonoBehaviour
 {
     public AudioMixer masterMixer;
     public Slider audioSlider;
@@ -21,12 +21,49 @@ public class AudioManager : MonoBehaviour
 
     string[] resolution = { "1080P", "900P", "720P" };
 
+    private void Awake()
+    {
+        OptionDataLoad();
+        transform.gameObject.SetActive(false);
+    }
+
     private void OnEnable()
     {
         isChange = false;
         incepVolume = audioSlider.value;
         incepresolCnt = resolutionCnt;
         incepFullScreen = isFullScreen;
+        SoundManager.instance.PlaySFX("MenuEnable");
+        
+        if (PlayerPrefs.GetFloat("Volume") != 0.0f) 
+        { 
+            audioSlider.value = PlayerPrefs.GetFloat("Volume");
+            volume = audioSlider.value;
+        }
+
+        if (PlayerPrefs.GetString("Resolution") != null)
+        {
+            resolutionText.text = PlayerPrefs.GetString("Resolution");
+            for(int i = 0; i < resolution.Length; i++)
+            {
+                if (PlayerPrefs.GetString("Resolution").Equals(resolution[i]))
+                {
+                    resolutionCnt = i;
+                }
+            }
+        }
+
+        if (PlayerPrefs.GetString("Display") != null)
+        {
+            screenText.text = PlayerPrefs.GetString("Display");
+            if (screenText.text.Equals("전체 화면"))
+            {
+                isFullScreen = true;
+            }
+            else isFullScreen = false;
+        }
+
+        Submit();
     }
 
     private void OnDisable()
@@ -37,9 +74,6 @@ public class AudioManager : MonoBehaviour
             resolutionCnt = incepresolCnt;
             isFullScreen = incepFullScreen;
             resolutionText.text = resolution[incepresolCnt];
-            if (isFullScreen) screenText.text = "전체 화면";
-            else screenText.text = "창 모드";
-            isChange = false;
         }
     }
     public void AudioControl()
@@ -75,6 +109,7 @@ public class AudioManager : MonoBehaviour
         incepFullScreen = isFullScreen;
         incepVolume = volume;
         incepresolCnt = resolutionCnt;
+        OptionDataSave();
     }
 
     public void ResolutionSetRight()
@@ -112,5 +147,44 @@ public class AudioManager : MonoBehaviour
         isChange = true;
         isFullScreen = false;
         screenText.text = "창 모드";
+    }
+
+    public void OptionDataSave()
+    {
+        if (isFullScreen)
+        {
+            PlayerPrefs.SetString("Display", "전체 화면");
+            screenText.text = "전체 화면";
+
+        }
+
+        else
+        {
+            PlayerPrefs.SetString("Display", "창 모드");
+            screenText.text = "창 모드";
+        }
+        isChange = false;
+
+        PlayerPrefs.SetFloat("Volume", volume);
+        PlayerPrefs.SetString("Resolution", resolution[resolutionCnt]);
+    }
+
+    public void OptionDataLoad()
+    {
+        if (PlayerPrefs.GetFloat("Volume") == -40f)
+        {
+            masterMixer.SetFloat("Master", -80f);
+            audioSlider.value = -40f;
+        }
+        else
+        {
+            masterMixer.SetFloat("Master", PlayerPrefs.GetFloat("Volume"));
+            audioSlider.value = PlayerPrefs.GetFloat("Volume");
+        }
+
+    }
+    private void OnApplicationQuit()
+    {
+        OptionDataSave();
     }
 }

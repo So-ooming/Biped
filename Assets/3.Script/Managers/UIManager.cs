@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject secondScene;
     [SerializeField] GameObject thirdScene;
     [SerializeField] GameObject ExitUI;
+    [SerializeField] GameObject OptionScene;
 
     void Update()
     {
@@ -46,6 +47,11 @@ public class UIManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Return) && thirdScene.activeSelf)
         {
             GameStart();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape) && OptionScene.activeSelf)
+        {
+            OptionQuit();
         }
     }
 
@@ -86,5 +92,17 @@ public class UIManager : MonoBehaviour
         thirdScene.SetActive(false);
         secondScene.SetActive(true);
         SoundManager.instance.PlaySFX("MenuEnable");
+    }
+
+    public void OptionQuit()
+    {
+        secondScene.gameObject.SetActive(true);
+        OptionScene.SetActive(false);
+    }
+
+    public void OptionEnter()
+    {
+        secondScene.gameObject.SetActive(false);
+        OptionScene.SetActive(true);
     }
 }
