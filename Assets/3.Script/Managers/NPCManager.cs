@@ -156,7 +156,7 @@ public class NPCManager : MonoBehaviour
             StartCoroutine(Typing(speechText, script[currentDialog]));
             NPC[currentNPC].NPCRightLegMovement();
             //currentDialog++;
-            player.isRight = true;
+            //player.isRight = true;
             firstPyosik.SetActive(true);
             tutoPanel.SetActive(true);
         }
@@ -166,7 +166,7 @@ public class NPCManager : MonoBehaviour
             currentDialog++;
             StartCoroutine(Typing(speechText, script[currentDialog]));
             NPC[currentNPC].NPCLeftLegMovement();
-            player.isLeft = true;
+            //player.isLeft = true;
             secondPyosik.SetActive(true);
             tutoPanel.transform.GetChild(0).GetComponent<Image>().sprite = leftClickImage;
             tutoPanel.transform.GetChild(1).GetComponent<Text>().text =

@@ -26,7 +26,7 @@ public class OptionManager : MonoBehaviour
         OptionDataLoad();
         transform.gameObject.SetActive(false);
     }
-
+    
     private void OnEnable()
     {
         isChange = false;
@@ -182,7 +182,33 @@ public class OptionManager : MonoBehaviour
             audioSlider.value = PlayerPrefs.GetFloat("Volume");
         }
 
+        if (PlayerPrefs.GetString("Display").Equals("전체 화면"))
+            isFullScreen = true;
+        else
+            isFullScreen = false;
+
+        if (PlayerPrefs.GetString("Resolution").Equals("1080P"))
+        {
+            Screen.SetResolution(1920, 1080, isFullScreen);
+        }
+        else if (PlayerPrefs.GetString("Resolution").Equals("900P"))
+        {
+            Screen.SetResolution(1600, 900, isFullScreen);
+        }
+        else
+        {
+            Screen.SetResolution(1280, 720, isFullScreen);
+        }
     }
+
+    public void AwakeForResolution()
+    {
+        if (PlayerPrefs.GetString("Resolution").Equals("1080P"))
+        {
+            Screen.SetResolution(1920, 1080, isFullScreen);
+        }
+    }
+
     private void OnApplicationQuit()
     {
         OptionDataSave();
